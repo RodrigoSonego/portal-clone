@@ -15,6 +15,10 @@ public class Player : MonoBehaviour
     InputAction moveAction;
     InputAction lookAction;
 
+
+    private Vector2 moveValue;
+    private Vector2 lookValue;
+
     private void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
@@ -27,14 +31,13 @@ public class Player : MonoBehaviour
     }
 
 
-    void FixedUpdate()
+    void Update()
     {
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
        
         // X = camera axis Y
         // Y = camera axix X
         Vector2 lookValue = lookAction.ReadValue<Vector2>();
-        print(lookValue);
 
 
         Move(moveValue);
@@ -43,7 +46,14 @@ public class Player : MonoBehaviour
 
     void Move(Vector2 moveValue)
     {
-        Vector3 newPosition = rb.position + (new Vector3(moveValue.x, 0, moveValue.y) * moveSpeed * Time.deltaTime);
+
+        print("transform forward: " + transform.forward);
+        Vector3 input = new();
+        input += transform.forward * moveValue.y;
+        input += transform.right * moveValue.x;
+        input = Vector3.ClampMagnitude(input, 1);
+
+        Vector3 newPosition = rb.position + (input * moveSpeed * Time.deltaTime);
         rb.MovePosition(newPosition);
     }
 
