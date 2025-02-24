@@ -9,11 +9,11 @@ public class PortalController : MonoBehaviour
 
     private void Update()
     {
-        float angle = Vector3.Angle(playerCamera.transform.position, portal.position);
+        float offsetX = portal.position.x - playerCamera.transform.position.x;
+        float offsetZ = portal.position.z - playerCamera.transform.position.z;
 
-        print(angle);
+        float angle = Mathf.Atan2(offsetZ, offsetX);
 
-        
-        //portalCamera.transform.rotation = Quaternion.Euler(0, result.y, 0);
+        portalCamera.transform.rotation = Quaternion.Euler(0, Mathf.Rad2Deg * -angle, 0);
     }
 }

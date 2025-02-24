@@ -16,9 +16,6 @@ public class Player : MonoBehaviour
     InputAction lookAction;
 
 
-    private Vector2 moveValue;
-    private Vector2 lookValue;
-
     private void Start()
     {
         moveAction = InputSystem.actions.FindAction("Move");
@@ -65,7 +62,7 @@ public class Player : MonoBehaviour
         cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
 
         Vector3 bodyEuler = transform.rotation.eulerAngles;
-        transform.localRotation = Quaternion.Euler(0, bodyEuler.y + offset.x, 0);
+        transform.localRotation = Quaternion.Euler(0, bodyEuler.y + (offset.x * sensitivity), 0);
     }
 
     private void ToggleMouseLock(InputAction.CallbackContext context)
