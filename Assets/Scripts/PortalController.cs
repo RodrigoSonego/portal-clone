@@ -33,15 +33,6 @@ public class PortalController : MonoBehaviour
 
     private void Update()
     {
-        //float xDistance = Mathf.Abs(player.transform.position.x - portal.position.x);
-        //float zDistance = Mathf.Abs(player.transform.position.z - portal.position.z);
-
-        //Vector3 offset = (portalPivotForward * zDistance) + (portalPivotRight * xDistance);
-
-        //print("portal cam pivot forward = " + portalCamPivot.forward);
-
-        //portalCamPivot.position = portalCamStartingPos - offset;
-
         float distance = Mathf.Abs(player.transform.position.z - portal.position.z);
         distance = Mathf.Clamp(distance, 0, maxCameraDistance);
 
@@ -67,7 +58,7 @@ public class PortalController : MonoBehaviour
             //print($"World  [{i}] {portalVertices[i]}");
 
             portalScreenPoints[i] = playerCamera.worldToCameraMatrix.MultiplyPoint(portalVertices[i]);
-            print($"Screen [{i}] {portalScreenPoints[i]}");
+            //print($"Screen [{i}] {portalScreenPoints[i]}");
         }
 
         //print("--------------------");
@@ -76,27 +67,17 @@ public class PortalController : MonoBehaviour
         float far = playerCamera.farClipPlane;
 
 
-        //// Normalize points to device coordinates
-        //float top = (portalScreenPoints[0].y / Screen.height) * 2 - 1;
-        //float bot = (portalScreenPoints[1].y / Screen.height) * 2 - 1;
-        //float left = (portalScreenPoints[2].x / Screen.width) * 2 - 1;
-        //float right = (portalScreenPoints[3].x / Screen.width) * 2 - 1;
+        float top = portalScreenPoints[0].y   / portalScreenPoints[0].z * near;
+        float bot = portalScreenPoints[1].y   / portalScreenPoints[1].z * near;
+        float left = portalScreenPoints[1].x  / portalScreenPoints[2].z * near;
+        float right = portalScreenPoints[0].x / portalScreenPoints[3].z * near;
 
-        float top = portalScreenPoints[0].y / portalScreenPoints[0].z * near;
-        float bot = portalScreenPoints[1].y / portalScreenPoints[1].z * near ;
-        float left = portalScreenPoints[2].x / portalScreenPoints[2].z * near ;
-        float right = portalScreenPoints[3].x / portalScreenPoints[3].z * near;
 
-        // Normalize to near plane
-        //left *= near;
-        //right *= near;
-        //bot *= near;
-        //top *= near;
-
-        //print($"Top: {top}, Bot: {bot}, Left: {left}, Right: {right}");
-
-        //Matrix4x4 frustum = Matrix4x4.Frustum(left, right, bot, top, near, far);
         Matrix4x4 frustum = Matrix4x4.Frustum(left, right, bot, top, near, far);
+
+        Matrix4x4 flipY = Matrix4x4.Rotate(Quaternion.Euler(0,0,180));
+
+        frustum = frustum * flipY;
 
         portalCamera.projectionMatrix = frustum;
     }
