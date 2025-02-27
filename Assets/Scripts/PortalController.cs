@@ -9,6 +9,7 @@ public class PortalController : MonoBehaviour
     [SerializeField] Transform portal;
     [SerializeField] Camera portalCamera;
     [SerializeField] Transform portalCamPivot;
+    [SerializeField] float maxCameraDistance = 2;
     Vector3 portalCamStartingPos;
     Vector3 portalCamStartingRot;
     Vector3 portalPivotForward;
@@ -41,11 +42,11 @@ public class PortalController : MonoBehaviour
 
         //portalCamPivot.position = portalCamStartingPos - offset;
 
-        float distance = Vector3.Distance(playerCamera.transform.position, portal.transform.position);
-        //distance = Mathf.Clamp(distance, 0, maxCameraDistance);
+        float distance = Mathf.Abs(player.transform.position.z - portal.position.z);
+        distance = Mathf.Clamp(distance, 0, maxCameraDistance);
 
-        //Vector3 offset = portalCamPivot.transform.forward * distance;
-        //portalCamPivot.transform.position = portalCamStartingPos - offset;
+        Vector3 offset = portalCamPivot.transform.forward * distance;
+        portalCamPivot.transform.position = portalCamStartingPos - offset;
 
 
         RotateCameraWithPlayer();
@@ -81,16 +82,16 @@ public class PortalController : MonoBehaviour
         //float left = (portalScreenPoints[2].x / Screen.width) * 2 - 1;
         //float right = (portalScreenPoints[3].x / Screen.width) * 2 - 1;
 
-        float top = portalScreenPoints[0].y  ;
-        float bot = portalScreenPoints[1].y  ;
-        float left = portalScreenPoints[2].x ;
-        float right = portalScreenPoints[3].x;
+        float top = portalScreenPoints[0].y / portalScreenPoints[0].z * near;
+        float bot = portalScreenPoints[1].y / portalScreenPoints[1].z * near ;
+        float left = portalScreenPoints[2].x / portalScreenPoints[2].z * near ;
+        float right = portalScreenPoints[3].x / portalScreenPoints[3].z * near;
 
         // Normalize to near plane
-        left *= near;
-        right *= near;
-        bot *= near;
-        top *= near;
+        //left *= near;
+        //right *= near;
+        //bot *= near;
+        //top *= near;
 
         //print($"Top: {top}, Bot: {bot}, Left: {left}, Right: {right}");
 
