@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
     void Move(Vector2 moveValue)
     {
 
-        print("transform forward: " + transform.forward);
+        //print("transform forward: " + transform.forward);
         Vector3 input = new();
         input += transform.forward * moveValue.y;
         input += transform.right * moveValue.x;
