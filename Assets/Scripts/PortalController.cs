@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Unity.Burst.Intrinsics.X86;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class PortalController : MonoBehaviour
@@ -39,7 +40,7 @@ public class PortalController : MonoBehaviour
         float distanceZ = Mathf.Abs(player.transform.position.z - portal.position.z);
         float distanceX = player.transform.position.x - portal.position.x;
 
-        Vector3 offsetZ = targetPortal.transform.forward * -1 * distanceZ;
+        Vector3 offsetZ = targetPortal.transform.forward * -1 * distanceZ * 0.7f;
         Vector3 offsetX = targetPortal.transform.right * -1 * distanceX;
 
         portalCamPivot.transform.position = portalCamStartingPos - offsetZ + offsetX;
@@ -47,13 +48,15 @@ public class PortalController : MonoBehaviour
 
         RotateCameraWithPlayer();
 
-        Vector3[] portalVertices =
-        {
-            portalMesh.bounds.min,                                                          // Bot-Left  
-            new(portalMesh.bounds.max.x, portalMesh.bounds.min.y, portalMesh.bounds.max.z), // Bot-Right 
-            new(portalMesh.bounds.min.x, portalMesh.bounds.max.y, portalMesh.bounds.min.z), // Top-Left 
-            portalMesh.bounds.max,                                                          // Top-Right
-        };
+        //Vector3[] portalVertices =
+        //{
+        //    portalMesh.bounds.min,                                                          // Bot-Left  
+        //    new(portalMesh.bounds.max.x, portalMesh.bounds.min.y, portalMesh.bounds.max.z), // Bot-Right 
+        //    new(portalMesh.bounds.min.x, portalMesh.bounds.max.y, portalMesh.bounds.min.z), // Top-Left 
+        //    portalMesh.bounds.max,                                                          // Top-Right
+        //};
+
+        Vector3[] portalVertices = portalMesh.GetComponent<MeshFilter>().mesh.vertices;
 
         float near = playerCamera.nearClipPlane;
         
@@ -63,18 +66,29 @@ public class PortalController : MonoBehaviour
 
             //print($"World  [{i}] {portalVertices[i]}");
 
-            Vector3 point = playerCamera.worldToCameraMatrix.MultiplyPoint(portalVertices[i]);
+            Vector3 point = playerCamera.worldToCameraMatrix.MultiplyPoint(portalMesh.transform.TransformPoint(portalVertices[i]));
+
+            Vector3 rotatedPos = Quaternion.Inverse(playerCamera.transform.rotation) * point;
+
+
+            Vector4 projected = playerCamera.projectionMatrix * new Vector4(rotatedPos.x, rotatedPos.y, rotatedPos.z, 1);
+            projected /= projected.w;
 
             //print($"point {i} in vp: " + playerCamera.WorldToViewportPoint(portalVertices[i]));
 
-            float scaledX = point.x / -point.z;
-            float scaledY = point.y / -point.z;
+            //float scaledX = point.x / -point.z;
+            //float scaledY = point.y / -point.z;
 
-            float uvX = (scaledX + 1) / 2f;
-            float uvY = (scaledY + 1) / 2f;
+            //float uvX = (scaledX + 1) / 2f;
+            //float uvY = (scaledY + 1) / 2f;
+
+            float uvX = (projected.x + 1) / 2f;
+            float uvY = (projected.y + 1) / 2f;
+
+            //uvX = Mathf.Clamp01(uvX);
+            //uvY = Mathf.Clamp01(uvY);
 
             portalUvPoints[i] = new(uvX, uvY);
-
             //print($"Screen [{i}] {portalUvPoints[i]}");
         }
 
@@ -121,11 +135,13 @@ public class PortalController : MonoBehaviour
         float offsetX = portal.position.x - player.transform.position.x;
         float offsetZ = portal.position.z - player.transform.position.z;
 
-        float angle = Mathf.Atan2(offsetZ, offsetX);
+        float angle = Mathf.Atan2(offsetZ, offsetX) * Mathf.Rad2Deg;
 
-        //portalCamPivot.transform.localRotation = Quaternion.Euler(0, Mathf.Rad2Deg * angle, 0);
+        //portalCamPivot.transform.localRotation = Quaternion.Euler(0,(Mathf.Rad2Deg * angle), 0);
 
         //playerCamera.transform.rotation = Quaternion.Euler(new(portalCamStartingRot.x, portalCamStartingRot.y + angle, portalCamStartingRot.z));
+
+        //portalCamPivot.rotation = Quaternion.Euler(0, -angle, 0);
 
         portalCamPivot.localRotation = Quaternion.Euler(0, portalCamStartingRot.y + player.transform.localRotation.eulerAngles.y, 0);
         //portalCamera.transform.localRotation = Quaternion.Euler(new(playerCamera.transform.localRotation.eulerAngles.x, portalCamera.transform.localRotation.y, 0));
