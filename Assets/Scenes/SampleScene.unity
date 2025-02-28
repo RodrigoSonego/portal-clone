@@ -650,7 +650,6 @@ Transform:
   - {fileID: 1920208388}
   - {fileID: 936259412}
   - {fileID: 1046988026}
-  - {fileID: 1280523174}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &114645912
@@ -6080,8 +6079,8 @@ MonoBehaviour:
   portalCamera: {fileID: 434072611}
   portalCamPivot: {fileID: 1280523174}
   maxCameraDistance: 30
-  portalMesh: {fileID: 1066964588}
-  playerCamera: {fileID: 893214489}
+  portalMesh: {fileID: 170371003}
+  playerCamera: {fileID: 330585545}
   player: {fileID: 1732195481}
 --- !u!4 &1169217344
 Transform:
@@ -6704,13 +6703,13 @@ Transform:
   m_GameObject: {fileID: 1280523173}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 15.222, y: -1.0599489, z: 0.4300003}
+  m_LocalPosition: {x: 5.744213, y: 0.796, z: -16.619999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 893214491}
   - {fileID: 434072614}
-  m_Father: {fileID: 41833952}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!43 &1324345767
 Mesh:
@@ -10728,3 +10727,4 @@ SceneRoots:
   - {fileID: 1169010081}
   - {fileID: 1433710796}
   - {fileID: 1107861819}
+  - {fileID: 1280523174}
