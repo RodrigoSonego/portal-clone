@@ -16,6 +16,8 @@ public class PortalController : MonoBehaviour
     Vector3 portalPivotRight;
 
 
+    [SerializeField] Transform targetPortal;
+
     [SerializeField] MeshRenderer portalMesh;
 
     [SerializeField] Camera playerCamera;
@@ -27,7 +29,7 @@ public class PortalController : MonoBehaviour
     private void Start()
     {
         portalCamStartingPos = portalCamPivot.position;
-        portalCamStartingRot = playerCamera.transform.localRotation.eulerAngles;
+        portalCamStartingRot = portalCamPivot.transform.localRotation.eulerAngles;
         portalPivotForward = portalCamPivot.transform.forward;
         portalPivotRight = portalCamPivot.transform.right;
     }
@@ -37,8 +39,8 @@ public class PortalController : MonoBehaviour
         float distanceZ = Mathf.Abs(player.transform.position.z - portal.position.z);
         float distanceX = player.transform.position.x - portal.position.x;
 
-        Vector3 offsetZ = portalCamPivot.transform.forward * distanceZ;
-        Vector3 offsetX = portalCamPivot.transform.right * distanceX;
+        Vector3 offsetZ = targetPortal.transform.forward * -1 * distanceZ;
+        Vector3 offsetX = targetPortal.transform.right * -1 * distanceX;
 
         portalCamPivot.transform.position = portalCamStartingPos - offsetZ + offsetX;
 
@@ -63,11 +65,17 @@ public class PortalController : MonoBehaviour
 
             Vector3 point = playerCamera.worldToCameraMatrix.MultiplyPoint(portalVertices[i]);
 
+            //print($"point {i} in vp: " + playerCamera.WorldToViewportPoint(portalVertices[i]));
+
             float scaledX = point.x / -point.z;
             float scaledY = point.y / -point.z;
 
-            portalUvPoints[i] = new((scaledX + 1) / 2f, (scaledY + 1) / 2f);
-            print($"Screen [{i}] {portalUvPoints[i]}");
+            float uvX = (scaledX + 1) / 2f;
+            float uvY = (scaledY + 1) / 2f;
+
+            portalUvPoints[i] = new(uvX, uvY);
+
+            //print($"Screen [{i}] {portalUvPoints[i]}");
         }
 
         portalMesh.GetComponent<MeshFilter>().mesh.uv = portalUvPoints;
@@ -115,11 +123,11 @@ public class PortalController : MonoBehaviour
 
         float angle = Mathf.Atan2(offsetZ, offsetX);
 
-        //playerCamera.transform.localRotation = Quaternion.Euler(0, Mathf.Rad2Deg * angle, 0);
+        //portalCamPivot.transform.localRotation = Quaternion.Euler(0, Mathf.Rad2Deg * angle, 0);
 
         //playerCamera.transform.rotation = Quaternion.Euler(new(portalCamStartingRot.x, portalCamStartingRot.y + angle, portalCamStartingRot.z));
 
-        //portalCamPivot.localRotation = Quaternion.Euler(portalPivotStartingRot.x, portalPivotStartingRot.y + player.transform.localRotation.eulerAngles.y, 0);
+        portalCamPivot.localRotation = Quaternion.Euler(0, portalCamStartingRot.y + player.transform.localRotation.eulerAngles.y, 0);
         //portalCamera.transform.localRotation = Quaternion.Euler(new(playerCamera.transform.localRotation.eulerAngles.x, portalCamera.transform.localRotation.y, 0));
     }
 }
