@@ -11,19 +11,15 @@ public class PortalController : MonoBehaviour
     [SerializeField] Camera portalCamera;
     [SerializeField] Transform portalCamPivot;
     [SerializeField] float maxCameraDistance = 2;
+
     Vector3 portalCamPivotStartingPos;
     Vector3 portalCamPivotStartingRot;
-    Vector3 portalPivotForward;
-    Vector3 portalPivotRight;
-    private Vector3 portalCameraStartingRot;
-
+    Vector3 portalCameraStartingRot;
 
     [SerializeField] MeshRenderer portalMesh;
 
     [SerializeField] Camera playerCamera;
     [SerializeField] Player player;
-
-    Vector3[] portalScreenPoints = new Vector3[4];
 
     private void Start()
     {
