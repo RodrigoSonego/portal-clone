@@ -4,25 +4,25 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
-public class PortalController : MonoBehaviour
+public class Portal : MonoBehaviour
 {
     [SerializeField] Transform portal;
-    [SerializeField] Transform targetPortal;
-    [SerializeField] Camera portalCamera;
+    [Space]
+    [SerializeField] Camera playerCamera;
+    [SerializeField] Player player;
+    [Space]
+    [SerializeField] Portal linkedPortal;
     [SerializeField] Transform portalCamPivot;
-    [SerializeField] float maxCameraDistance = 2;
+    [SerializeField] Camera portalCamera;
 
     Vector3 portalCamPivotStartingPos;
     Vector3 portalCamPivotStartingRot;
     Vector3 portalCameraStartingRot;
 
-    [SerializeField] MeshRenderer portalMesh;
-
-    [SerializeField] Camera playerCamera;
-    [SerializeField] Player player;
-
     private void Start()
     {
+        if(portalCamera == null) { return; }
+
         portalCamPivotStartingPos = portalCamPivot.position;
         portalCamPivotStartingRot = portalCamera.transform.rotation.eulerAngles;
         
@@ -31,20 +31,27 @@ public class PortalController : MonoBehaviour
 
     private void Update()
     {
-        float distanceZ = Mathf.Abs(player.transform.position.z - portal.position.z);
-        float distanceX = player.transform.position.x - portal.position.x;
+        if (linkedPortal == null) { return; }
 
-        Vector3 offsetZ = targetPortal.transform.forward * -1 * distanceZ * 0.7f;
-        Vector3 offsetX = targetPortal.transform.right * -1 * distanceX;
-
-        portalCamPivot.transform.position = portalCamPivotStartingPos - offsetZ + offsetX;
+        MovePortalCamRelativeToPlayer();
 
         RotateCameraWithPlayer();
     }
 
+    private void MovePortalCamRelativeToPlayer()
+    {
+        float distanceZ = Mathf.Abs(player.transform.position.z - portal.position.z);
+        float distanceX = player.transform.position.x - portal.position.x;
+
+        Vector3 offsetZ = linkedPortal.transform.forward * -1 * distanceZ * 0.7f;
+        Vector3 offsetX = linkedPortal.transform.right * -1 * distanceX;
+
+        portalCamPivot.transform.position = portalCamPivotStartingPos - offsetZ + offsetX;
+    }
+
     private void RotateCameraWithPlayer()
     {
-        portalCamPivot.localRotation = Quaternion.Euler(0, portalCamPivotStartingRot.y + player.transform.localRotation.eulerAngles.y, 0);
+        portalCamPivot.rotation = Quaternion.Euler(0, portalCamPivotStartingRot.y + player.transform.localRotation.eulerAngles.y, 0);
 
         portalCamera.transform.localRotation = Quaternion.Euler(portalCameraStartingRot.x + playerCamera.transform.localRotation.eulerAngles.x, portalCamera.transform.localRotation.y, 0);
     }
