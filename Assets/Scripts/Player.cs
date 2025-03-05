@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
        
@@ -43,7 +43,6 @@ public class Player : MonoBehaviour
 
     void Move(Vector2 moveValue)
     {
-
         //print("transform forward: " + transform.forward);
         Vector3 input = new();
         input += transform.forward * moveValue.y;
@@ -68,5 +67,21 @@ public class Player : MonoBehaviour
     private void ToggleMouseLock(InputAction.CallbackContext context)
     {
         Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Portal") == false) { return; }
+
+        other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: false);
+        other.GetComponentInParent<Portal>().OnPlayerEnterPortal();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Portal") == false) { return; }
+
+        other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: true);
+        other.GetComponentInParent<Portal>().OnPlayerExitPortal();
     }
 }
