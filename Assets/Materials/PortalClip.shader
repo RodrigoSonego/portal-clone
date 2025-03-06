@@ -9,6 +9,7 @@ Shader "CustomRenderTexture/PortalClip"
      SubShader
      {
         Blend One Zero
+        Tags { "RenderType"="Opaque" "Queue"="Geometry" "IgnoreProjector"="True" }
 
         Pass
         {

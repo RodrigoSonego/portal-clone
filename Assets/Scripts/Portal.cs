@@ -23,6 +23,8 @@ public class Portal : MonoBehaviour
     Vector3 portalCameraStartingRot;
 
     bool hasObjectInteracting = false;
+    bool isReceivingTeleport = false;
+    public bool ReceivingTeleport { get { return isReceivingTeleport; } set { isReceivingTeleport = value; } }
 
     private void Awake()
     {
@@ -80,7 +82,7 @@ public class Portal : MonoBehaviour
 
     private void HandlePortalInteraction()
     {
-        if (hasObjectInteracting == false) { return; }
+        if (hasObjectInteracting == false || isReceivingTeleport) { return; }
 
         float distToPortal = Vector3.Distance(Vector3.Scale(portal.transform.forward, player.transform.position), Vector3.Scale(portal.position, portal.transform.forward));
 
@@ -96,6 +98,9 @@ public class Portal : MonoBehaviour
     {
         player.transform.position = linkedPortal.portalCamPivot.transform.position;
         player.transform.localRotation = linkedPortal.portalCamPivot.rotation;
+
+        linkedPortal.ToggleWallCollision(willEnable: false);
+        linkedPortal.isReceivingTeleport = true; 
     }
 
     public void ToggleWallCollision(bool willEnable)
@@ -111,5 +116,9 @@ public class Portal : MonoBehaviour
         hasObjectInteracting = true;
     }
 
-    public void OnPlayerExitPortal() { hasObjectInteracting = false; }
+    public void OnPlayerExitPortal() {
+        hasObjectInteracting = false;
+
+        isReceivingTeleport = false;
+    }
 }
