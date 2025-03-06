@@ -13,7 +13,7 @@ public class Portal : MonoBehaviour
     [SerializeField] Player player;
     [Space]
     [SerializeField] Portal linkedPortal;
-    [SerializeField] Transform portalCamPivot;
+    [SerializeField] public Transform portalCamPivot;
     [SerializeField] Camera portalCamera;
 
     [SerializeField] Collider portalWallCollider;
@@ -26,11 +26,12 @@ public class Portal : MonoBehaviour
     Vector3 portalCamPivotStartingRot;
     Vector3 portalCameraStartingRot;
 
-    Collider playerCollider;
+    Vector3 camPivotForward;
+    Vector3 camPivotRight;
 
     bool hasObjectInteracting = false;
 
-    private void Start()
+    private void Awake()
     {
         if(linkedPortal == null) { return; }
 
@@ -41,8 +42,14 @@ public class Portal : MonoBehaviour
 
         playerCamera = Camera.main;
 
-        playerCollider = player.GetComponentInChildren<Collider>();
+        camPivotForward = portalCamPivot.forward;
+        camPivotRight = portalCamPivot.right;
 
+        //camPivotForward = linkedPortal.transform.forward * -1;
+        //camPivotRight = linkedPortal.transform.right * -1;
+
+        //print($"{name} pivot forward: {camPivotForward}, right: {camPivotRight}");
+        //print($"{name} forward: {linkedPortal.transform.forward * -1}, right: {linkedPortal.transform.right * -1}");
         //playerCamera.targetTexture = portalMesh.material.GetTexture("_MainTex");
     }
 
@@ -62,18 +69,39 @@ public class Portal : MonoBehaviour
 
     private void MovePortalCamRelativeToPlayer()
     {
-        float distanceZ = Mathf.Abs(player.transform.position.z - portal.position.z);
-        float distanceX = player.transform.position.x - portal.position.x;
+        float distanceZ = player.transform.position.z - linkedPortal.transform.position.z;
+        float distanceX = player.transform.position.x - linkedPortal.transform.position.x;
 
-        Vector3 offsetZ = linkedPortal.transform.forward * -1 * distanceZ * 0.7f;
-        Vector3 offsetX = linkedPortal.transform.right * -1 * distanceX;
+        //Vector3 forward = Vector3.Scale(player.transform.position, portal.forward) - Vector3.Scale(portal.position, portal.forward);
+        //Vector3 right = Vector3.Scale(player.transform.position, portal.right) - Vector3.Scale(portal.position, portal.right);
 
-        portalCamPivot.transform.position = portalCamPivotStartingPos - offsetZ + offsetX;
+        //float distanceZ = forward.magnitude;
+        //float distanceX = right.magnitude;
+
+        float angle = Vector3.SignedAngle(portal.forward, linkedPortal.transform.forward, Vector3.up);
+
+        print($"{name} angle to other: {angle}");
+
+        Vector3 offsetZ = portal.transform.forward * (angle >= 90 ? distanceX : distanceZ);
+        Vector3 offsetX = portal.transform.right * (angle >= 90 ? distanceZ : distanceX);
+        
+        //Vector3 offsetZ = camPivotRight * distanceZ;
+        //Vector3 offsetX = camPivotForward * distanceX;
+
+        //print($"{gameObject.name} camera offset: x:{offsetX}, z:{offsetZ}");
+
+        portalCamPivot.transform.position = portalCamPivotStartingPos - offsetZ - offsetX;
+
+        //portalCamPivot.transform.position = portalCamPivotStartingPos - offset;
     }
 
     private void RotateCameraWithPlayer()
     {
-        portalCamPivot.rotation = Quaternion.Euler(0, portalCamPivotStartingRot.y + player.transform.localRotation.eulerAngles.y, 0);
+        float angle = Vector3.SignedAngle(linkedPortal.transform.forward, player.transform.forward, Vector3.up);
+        
+
+        //portalCamPivot.rotation = Quaternion.Euler(0, -portalCamPivotStartingRot.y + angle, 0);
+        portalCamPivot.rotation = Quaternion.Euler(0, portalCamPivotStartingRot.y + angle, 0);
 
         portalCamera.transform.localRotation = Quaternion.Euler(portalCameraStartingRot.x + playerCamera.transform.localRotation.eulerAngles.x, portalCamera.transform.localRotation.y, 0);
     }
@@ -94,18 +122,10 @@ public class Portal : MonoBehaviour
 
     private void TeleportPlayer()
     {
-        player.transform.position = portalCamPivot.transform.position;
-        player.transform.localRotation = portalCamPivot.rotation;
+        player.transform.position = linkedPortal.portalCamPivot.transform.position;
+        player.transform.localRotation = linkedPortal.portalCamPivot.rotation;
         
-        print($"Portal -Front: {-linkedPortal.transform.forward}, Player Front: {player.transform.forward}");
-
-        //float offsetX = -linkedPortal.transform.forward.z - player.transform.forward.z;
-        //float offsetZ = -linkedPortal.transform.right.x - player.transform.right.x;
-
-        //float angle = Vector3.Angle(-linkedPortal.transform.forward, player.transform.forward);
-
-        //player.transform.localRotation = Quaternion.Euler(0, -angle, 0);
-
+        //print($"Portal -Front: {-linkedPortal.transform.forward}, Player Front: {player.transform.forward}");
     }
 
     public void ToggleWallCollision(bool willEnable)

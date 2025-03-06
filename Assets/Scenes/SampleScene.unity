@@ -881,8 +881,8 @@ MonoBehaviour:
   portalMesh: {fileID: 0}
   player: {fileID: 1732195481}
   linkedPortal: {fileID: 418495657}
-  portalCamPivot: {fileID: 562577867}
-  portalCamera: {fileID: 1202167795}
+  portalCamPivot: {fileID: 1280523174}
+  portalCamera: {fileID: 434072611}
   portalWallCollider: {fileID: 0}
   minDistance: 0.1
 --- !u!4 &243261207
@@ -2960,8 +2960,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 562577866}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.08399999, z: 0.2972131}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: -0.08399999, z: 0.29721355}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10119,7 +10119,7 @@ GameObject:
   - component: {fileID: 2032674603}
   - component: {fileID: 2032674602}
   - component: {fileID: 2032674601}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10945,11 +10945,11 @@ PrefabInstance:
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: portalCamera
       value: 
-      objectReference: {fileID: 434072611}
+      objectReference: {fileID: 1202167795}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: portalCamPivot
       value: 
-      objectReference: {fileID: 1280523174}
+      objectReference: {fileID: 562577867}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: portalWallCollider
       value: 
