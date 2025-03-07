@@ -3483,13 +3483,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 178903758028179425, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 421667797315986574, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 982592791072295658, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2285922182979486941, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_TargetTexture
       value: 
       objectReference: {fileID: 8400000, guid: 542a77b2de433b7408e1fe085b24a528, type: 2}
+    - target: {fileID: 3152464153062292005, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3921049420798220025, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.447
+      value: 5.469
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3542,6 +3562,22 @@ PrefabInstance:
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: minDistanceToTeleport
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827714294197306701, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5939530345635448005, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6894021421012557358, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 375f9923cc50c164ba06cadf6e657505, type: 2}
+    - target: {fileID: 7614836575946889969, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7736838078168288052, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_Name
@@ -7866,7 +7902,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 10
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -7881,7 +7917,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!136 &1732195483
 CapsuleCollider:
@@ -10242,7 +10278,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.854
+      value: 7.824
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10284,10 +10320,6 @@ PrefabInstance:
       propertyPath: portalWallCollider
       value: 
       objectReference: {fileID: 2032674601}
-    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
-      propertyPath: minDistanceToTeleport
-      value: 0.1
-      objectReference: {fileID: 0}
     - target: {fileID: 7736838078168288052, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_Name
       value: Portal

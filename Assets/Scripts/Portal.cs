@@ -5,6 +5,7 @@ using UnityEngine;
 public class Portal : MonoBehaviour
 {
     [SerializeField] Transform portal;
+    [SerializeField] Transform portalMesh;
     [Space]
     [SerializeField] Player player;
     [Space]
@@ -50,6 +51,7 @@ public class Portal : MonoBehaviour
 
     private void LateUpdate()
     {
+        PreventPortalClip();
         HandlePortalInteraction();
     }
 
@@ -108,7 +110,16 @@ public class Portal : MonoBehaviour
 
     void PreventPortalClip()
     {
-        
+        float halfHeight = playerCamera.nearClipPlane * Mathf.Tan(playerCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+
+        var halfWidth = halfHeight * playerCamera.aspect;
+
+        float distToClipPlaneCorner = new Vector3(halfWidth, halfHeight, playerCamera.nearClipPlane).magnitude;
+
+        bool isPlayerInFrontOfPortal = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)) > 0;
+
+        portalMesh.localScale = new Vector3(portalMesh.localScale.x, portalMesh.localScale.y, distToClipPlaneCorner);
+        portalMesh.localPosition = portal.forward * distToClipPlaneCorner * (isPlayerInFrontOfPortal ? -0.3f : 0.3f);
     }
 
     //TODO: Método pra trackear o collider que ta interagindo com o portal (futuramente ter uma lista de colliders)
