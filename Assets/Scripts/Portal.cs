@@ -36,7 +36,6 @@ public class Portal : MonoBehaviour
         portalCameraStartingRot = portalCamera.transform.localRotation.eulerAngles;
 
         playerCamera = Camera.main;
-
         //TODO: Set camera output texture here to avoid editor confusion
     }
 
@@ -62,11 +61,10 @@ public class Portal : MonoBehaviour
         //Vector3 forward = Vector3.Scale(player.transform.position, portal.forward) - Vector3.Scale(portal.position, portal.forward);
         //Vector3 right = Vector3.Scale(player.transform.position, portal.right) - Vector3.Scale(portal.position, portal.right);
 
-        //TODO: too sloppy, find another way, maybe using the sacele method up there /\
+        //TODO: too sloppy and gambiarra, find another way, maybe using the sacele method up there /\
         float angle = Vector3.SignedAngle(portal.forward, linkedPortal.transform.forward, Vector3.up);
-
         Vector3 offsetZ = portal.transform.forward * (angle >= 90 ? distanceX : distanceZ);
-        Vector3 offsetX = portal.transform.right * (angle >= 90 ? distanceZ : distanceX);
+        Vector3 offsetX = portal.transform.right * (angle >= 90 ? -distanceZ : distanceX);
 
         portalCamPivot.transform.position = portalCamPivotStartingPos - offsetZ - offsetX;
     }
@@ -84,11 +82,9 @@ public class Portal : MonoBehaviour
     {
         if (hasObjectInteracting == false || isReceivingTeleport) { return; }
 
-        float distToPortal = Vector3.Distance(Vector3.Scale(portal.transform.forward, player.transform.position), Vector3.Scale(portal.position, portal.transform.forward));
+        var playerDot = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position));
 
-        print("distance to portal: " + distToPortal);
-
-        if (distToPortal <= minDistanceToTeleport)
+        if (playerDot < 0)
         {
             TeleportPlayer();
         }
@@ -108,6 +104,11 @@ public class Portal : MonoBehaviour
         if (portalWallCollider == null) { print($"portal {gameObject.name} sem parede"); return; }
 
         portalWallCollider.enabled = willEnable;
+    }
+
+    void PreventPortalClip()
+    {
+        
     }
 
     //TODO: Método pra trackear o collider que ta interagindo com o portal (futuramente ter uma lista de colliders)
