@@ -82,7 +82,7 @@ public class Portal : MonoBehaviour
 
     private void HandlePortalInteraction()
     {
-        if (hasObjectInteracting == false || isReceivingTeleport) { return; }
+        if (hasObjectInteracting == false) { return; }
 
         var playerDot = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position));
 
@@ -98,7 +98,6 @@ public class Portal : MonoBehaviour
         player.transform.localRotation = linkedPortal.portalCamPivot.rotation;
 
         linkedPortal.ToggleWallCollision(willEnable: false);
-        linkedPortal.isReceivingTeleport = true; 
     }
 
     public void ToggleWallCollision(bool willEnable)
@@ -130,7 +129,5 @@ public class Portal : MonoBehaviour
 
     public void OnPlayerExitPortal() {
         hasObjectInteracting = false;
-
-        isReceivingTeleport = false;
     }
 }
