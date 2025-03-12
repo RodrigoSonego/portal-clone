@@ -3499,6 +3499,10 @@ PrefabInstance:
       propertyPath: m_TargetTexture
       value: 
       objectReference: {fileID: 8400000, guid: 542a77b2de433b7408e1fe085b24a528, type: 2}
+    - target: {fileID: 2285922182979486941, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 183
+      objectReference: {fileID: 0}
     - target: {fileID: 3152464153062292005, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -10268,6 +10272,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2285922182979486941, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 183
+      objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.91
@@ -10286,15 +10294,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

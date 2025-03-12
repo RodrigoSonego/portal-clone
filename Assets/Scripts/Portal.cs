@@ -47,6 +47,23 @@ public class Portal : MonoBehaviour
         MovePortalCamRelativeToPlayer();
 
         RotateCameraWithPlayer();
+
+        CreateObliqueProjection();
+    }
+
+    // Sets a Oblique projection to coincide the near plane with the portal plane
+    // Further Reference:   https://www.terathon.com/lengyel/Lengyel-Oblique.pdf
+    //                      https://danielilett.com/2019-12-18-tut4-3-matrix-matching/
+    private void CreateObliqueProjection()
+    {
+        //Creates a plane at the portal position and set the normal
+        Plane plane = new Plane(-portal.forward, portal.position);
+        Vector4 clipPlane = new(plane.normal.x, plane.normal.y, plane.normal.z, plane.distance);
+
+        //Transforms clip plane to camera space (still didn't understand the need to transpose the inverse matrix)
+        Vector4 clipPlaneCameraSpace = Matrix4x4.Transpose(Matrix4x4.Inverse(portalCamera.worldToCameraMatrix)) * clipPlane;
+
+        portalCamera.projectionMatrix = playerCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
     }
 
     private void LateUpdate()
