@@ -10,12 +10,12 @@ public class Portal : MonoBehaviour
     [SerializeField] Player player;
     [Space]
     [SerializeField] Portal linkedPortal;
-    [SerializeField] public Transform portalCamPivot;
+    [SerializeField] Transform portalCamPivot;
     [SerializeField] Camera portalCamera;
 
     [SerializeField] Collider portalWallCollider;
 
-    [SerializeField] float minDistanceToTeleport;
+    [SerializeField] float minDotForObliqueProj;
 
     Camera playerCamera;
 
@@ -49,6 +49,12 @@ public class Portal : MonoBehaviour
         RotateCameraWithPlayer();
 
         CreateObliqueProjection();
+
+    }
+    private void LateUpdate()
+    {
+        PreventPortalClip();
+        HandlePortalInteraction();
     }
 
     // Sets a Oblique projection to coincide the near plane with the portal plane
@@ -56,20 +62,23 @@ public class Portal : MonoBehaviour
     //                      https://danielilett.com/2019-12-18-tut4-3-matrix-matching/
     private void CreateObliqueProjection()
     {
+        // Could also use distance here, using portal.InverseTransformPoint(player.transform.position) and scaling by portal.forward
+        float dot = Vector3.Dot(linkedPortal.transform.forward, (linkedPortal.transform.position - player.transform.position));
+
+        if (dot <= minDotForObliqueProj)
+        {
+            portalCamera.projectionMatrix = playerCamera.projectionMatrix;
+            return;
+        }
+
         //Creates a plane at the portal position and set the normal
         Plane plane = new Plane(-portal.forward, portal.position);
         Vector4 clipPlane = new(plane.normal.x, plane.normal.y, plane.normal.z, plane.distance);
 
-        //Transforms clip plane to camera space (still didn't understand the need to transpose the inverse matrix)
+        //Transforms clip plane to camera space (need to transpose the inverse matrix because dealing with normal vector)
         Vector4 clipPlaneCameraSpace = Matrix4x4.Transpose(Matrix4x4.Inverse(portalCamera.worldToCameraMatrix)) * clipPlane;
 
         portalCamera.projectionMatrix = playerCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
-    }
-
-    private void LateUpdate()
-    {
-        PreventPortalClip();
-        HandlePortalInteraction();
     }
 
     private void MovePortalCamRelativeToPlayer()

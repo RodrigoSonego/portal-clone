@@ -10328,6 +10328,10 @@ PrefabInstance:
       propertyPath: portalWallCollider
       value: 
       objectReference: {fileID: 2032674601}
+    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: minDotForObliqueProj
+      value: 0.56
+      objectReference: {fileID: 0}
     - target: {fileID: 7736838078168288052, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_Name
       value: Portal

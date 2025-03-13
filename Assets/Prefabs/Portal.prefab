@@ -809,7 +809,7 @@ MonoBehaviour:
   portalCamPivot: {fileID: 421667797315986574}
   portalCamera: {fileID: 2285922182979486941}
   portalWallCollider: {fileID: 0}
-  minDistanceToTeleport: 0.1
+  minDotForObliqueProj: 0.56
 --- !u!1 &9186522198241925415
 GameObject:
   m_ObjectHideFlags: 0
