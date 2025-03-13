@@ -5,7 +5,7 @@ using UnityEngine;
 public class Portal : MonoBehaviour
 {
     [SerializeField] Transform portal;
-    [SerializeField] Transform portalMesh;
+    [SerializeField] MeshRenderer portalMesh;
     [Space]
     [SerializeField] Player player;
     [Space]
@@ -24,20 +24,19 @@ public class Portal : MonoBehaviour
     Vector3 portalCameraStartingRot;
 
     bool hasObjectInteracting = false;
-    bool isReceivingTeleport = false;
-    public bool ReceivingTeleport { get { return isReceivingTeleport; } set { isReceivingTeleport = value; } }
 
     private void Awake()
     {
-        if(linkedPortal == null) { return; }
+        if (linkedPortal == null) { return; }
 
         portalCamPivotStartingPos = portalCamPivot.position;
         portalCamPivotStartingRot = portalCamera.transform.rotation.eulerAngles;
-        
+
         portalCameraStartingRot = portalCamera.transform.localRotation.eulerAngles;
 
         playerCamera = Camera.main;
-        //TODO: Set camera output texture here to avoid editor confusion
+
+        CreateRenderTexture();
     }
 
     private void Update()
@@ -55,6 +54,13 @@ public class Portal : MonoBehaviour
     {
         PreventPortalClip();
         HandlePortalInteraction();
+    }
+
+    private void CreateRenderTexture()
+    {
+        RenderTexture tex = new RenderTexture(Screen.width, Screen.height, 32);
+        portalCamera.targetTexture = tex;
+        linkedPortal.portalMesh.material.SetTexture("_MainTex", tex);
     }
 
     // Sets a Oblique projection to coincide the near plane with the portal plane
@@ -143,8 +149,8 @@ public class Portal : MonoBehaviour
 
         bool isPlayerInFrontOfPortal = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)) > 0;
 
-        portalMesh.localScale = new Vector3(portalMesh.localScale.x, portalMesh.localScale.y, distToClipPlaneCorner);
-        portalMesh.localPosition = portal.forward * distToClipPlaneCorner * (isPlayerInFrontOfPortal ? -0.3f : 0.3f);
+        portalMesh.transform.localScale = new Vector3(portalMesh.transform.localScale.x, portalMesh.transform.localScale.y, distToClipPlaneCorner);
+        portalMesh.transform.localPosition = portal.forward * distToClipPlaneCorner * (isPlayerInFrontOfPortal ? -0.3f : 0.3f);
     }
 
     //TODO: Método pra trackear o collider que ta interagindo com o portal (futuramente ter uma lista de colliders)
