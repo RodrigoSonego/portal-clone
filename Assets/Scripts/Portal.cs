@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
+    [Header("Portal Refences")]
     [SerializeField] Transform portal;
     [SerializeField] MeshRenderer portalMesh;
+    [SerializeField] Portal linkedPortal;
+    [SerializeField] Collider portalWallCollider;
     [Space]
     [SerializeField] Player player;
-    [Space]
-    [SerializeField] Portal linkedPortal;
+    [Header("Portal Camera Config")]
     [SerializeField] Transform portalCamPivot;
     [SerializeField] Camera portalCamera;
-
-    [SerializeField] Collider portalWallCollider;
-
     [SerializeField] float minDotForObliqueProj;
 
     Camera playerCamera;
@@ -89,18 +88,9 @@ public class Portal : MonoBehaviour
 
     private void MovePortalCamRelativeToPlayer()
     {
-        float distanceZ = player.transform.position.z - linkedPortal.transform.position.z;
-        float distanceX = player.transform.position.x - linkedPortal.transform.position.x;
-
-        //Vector3 forward = Vector3.Scale(player.transform.position, portal.forward) - Vector3.Scale(portal.position, portal.forward);
-        //Vector3 right = Vector3.Scale(player.transform.position, portal.right) - Vector3.Scale(portal.position, portal.right);
-
-        //TODO: too sloppy and gambiarra, find another way, maybe using the sacele method up there /\
-        float angle = Vector3.SignedAngle(portal.forward, linkedPortal.transform.forward, Vector3.up);
-        Vector3 offsetZ = portal.transform.forward * (angle >= 90 ? distanceX : distanceZ);
-        Vector3 offsetX = portal.transform.right * (angle >= 90 ? -distanceZ : distanceX);
-
-        portalCamPivot.transform.position = portalCamPivotStartingPos - offsetZ - offsetX;
+        Vector3 playerInPortalSpace = linkedPortal.transform.InverseTransformPoint(player.transform.position);
+        // Only reversing X and Z since we want the camera to be behind the portal, but at the same height
+        portalCamPivot.transform.localPosition = new(-playerInPortalSpace.x, playerInPortalSpace.y, -playerInPortalSpace.z);
     }
 
     private void RotateCameraWithPlayer()
@@ -139,6 +129,9 @@ public class Portal : MonoBehaviour
         portalWallCollider.enabled = willEnable;
     }
 
+    //  Sets the MeshRenderer scale so that's just enough to not be clipped by the near plane
+    // also moves the portal to the back of the player when dot is negative
+    //  Useful to hide the portal from the player camera when he teleports
     void PreventPortalClip()
     {
         float halfHeight = playerCamera.nearClipPlane * Mathf.Tan(playerCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
