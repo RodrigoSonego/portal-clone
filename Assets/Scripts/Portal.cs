@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Portal : MonoBehaviour
 {
@@ -17,18 +18,15 @@ public class Portal : MonoBehaviour
     [SerializeField] float minDotForObliqueProj;
 
     Camera playerCamera;
-
-    Vector3 portalCamPivotStartingPos;
     Vector3 portalCamPivotStartingRot;
     Vector3 portalCameraStartingRot;
 
-    bool hasObjectInteracting = false;
+    List<PortalTraveler> trackedTravelers;
 
     private void Awake()
     {
         if (linkedPortal == null) { return; }
 
-        portalCamPivotStartingPos = portalCamPivot.position;
         portalCamPivotStartingRot = portalCamera.transform.rotation.eulerAngles;
 
         portalCameraStartingRot = portalCamera.transform.localRotation.eulerAngles;
@@ -36,9 +34,13 @@ public class Portal : MonoBehaviour
         playerCamera = Camera.main;
 
         CreateRenderTexture();
+
+        RenderPipelineManager.beginContextRendering += (a, b) => DoStuff();
+
+        trackedTravelers = new List<PortalTraveler>();
     }
 
-    private void Update()
+    public void DoStuff()
     {
         if (linkedPortal == null) { return; }
 
@@ -48,10 +50,10 @@ public class Portal : MonoBehaviour
 
         CreateObliqueProjection();
 
+        PreventPortalClip();
     }
     private void LateUpdate()
     {
-        PreventPortalClip();
         HandlePortalInteraction();
     }
 
@@ -104,22 +106,42 @@ public class Portal : MonoBehaviour
 
     private void HandlePortalInteraction()
     {
-        if (hasObjectInteracting == false) { return; }
-
-        var playerDot = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position));
-
-        if (playerDot < 0)
+        foreach (var traveler in trackedTravelers)
         {
-            TeleportPlayer();
+            float travelerDot = Vector3.Dot(portal.transform.forward, portal.transform.position - traveler.transform.position);
+            if(traveler.PreviousDot == 0) { traveler.PreviousDot = travelerDot; }
+            
+            print($"{name} currentDot: {travelerDot} old dot: {traveler.PreviousDot}");
+            print($"{name} currentDot: {Mathf.Sign(travelerDot)} old dot: {Mathf.Sign(traveler.PreviousDot)}");
+            
+            if (Mathf.Sign(travelerDot) != Math.Sign(traveler.PreviousDot))
+            {
+                TeleportTraveler(traveler);
+                trackedTravelers.Remove(traveler);
+                return;
+            }
+
+            traveler.PreviousDot = travelerDot;
         }
     }
 
-    private void TeleportPlayer()
+    // TODO: only work for teleporting player
+    private void TeleportTraveler(PortalTraveler traveler)
     {
-        player.transform.position = linkedPortal.portalCamPivot.transform.position;
-        player.transform.localRotation = linkedPortal.portalCamPivot.rotation;
-
+        // Teleport to portalCamPivot since it will have the same offset as the player
+        Vector3 relativePos = portal.InverseTransformPoint(player.transform.position);
+        relativePos.x *= -1;
+        relativePos.z *= -1;
+        
+        Vector3 worldPos = linkedPortal.transform.TransformPoint(relativePos);
+        
+        traveler.Teleport(worldPos, linkedPortal.portalCamPivot.rotation);
+        
+        traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward, linkedPortal.transform.position - traveler.transform.position);
+        
         linkedPortal.ToggleWallCollision(willEnable: false);
+        
+        
     }
 
     public void ToggleWallCollision(bool willEnable)
@@ -143,16 +165,25 @@ public class Portal : MonoBehaviour
         bool isPlayerInFrontOfPortal = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)) > 0;
 
         portalMesh.transform.localScale = new Vector3(portalMesh.transform.localScale.x, portalMesh.transform.localScale.y, distToClipPlaneCorner);
-        portalMesh.transform.localPosition = portal.forward * distToClipPlaneCorner * (isPlayerInFrontOfPortal ? -0.3f : 0.3f);
+        portalMesh.transform.localPosition = Vector3.forward * distToClipPlaneCorner * 1.5f;// (isPlayerInFrontOfPortal ? 1.5f : -1.5f);
+
+        //portalWallCollider.GetComponent<MeshRenderer>().enabled = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)) > 0.01f;
+
+        //print(name + ": " + Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)));
     }
 
-    //TODO: Método pra trackear o collider que ta interagindo com o portal (futuramente ter uma lista de colliders)
-    public void OnPlayerEnterPortal()
+    //TODO: Mï¿½todo pra trackear o collider que ta interagindo com o portal (futuramente ter uma lista de colliders)
+    public void OnObjectEnterPortal(PortalTraveler traveler)
     {
-        hasObjectInteracting = true;
+        if (trackedTravelers.Contains(traveler)) { return; }
+
+        trackedTravelers.Add(traveler);
     }
 
-    public void OnPlayerExitPortal() {
-        hasObjectInteracting = false;
+    public void OnPlayerExitPortal(PortalTraveler traveler) {
+        if (trackedTravelers.Contains(traveler))
+        {
+            trackedTravelers.Remove(traveler);
+        }
     }
 }

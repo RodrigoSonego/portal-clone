@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
         // Y = camera axix X
         Vector2 lookValue = lookAction.ReadValue<Vector2>();
 
-
+        if (Cursor.lockState == CursorLockMode.None) { return; }
         Move(moveValue);
         UpdateCamera(lookValue);
     }
@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Portal") == false) { return; }
 
         other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: false);
-        other.GetComponentInParent<Portal>().OnPlayerEnterPortal();
+        other.GetComponentInParent<Portal>().OnObjectEnterPortal(GetComponent<PortalTraveler>());
     }
 
     private void OnTriggerExit(Collider other)
@@ -82,6 +82,6 @@ public class Player : MonoBehaviour
         if (other.CompareTag("Portal") == false) { return; }
 
         other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: true);
-        other.GetComponentInParent<Portal>().OnPlayerExitPortal();
+        other.GetComponentInParent<Portal>().OnPlayerExitPortal(GetComponent<PortalTraveler>());
     }
 }

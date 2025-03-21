@@ -197,7 +197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6748927349012630929
 Transform:
   m_ObjectHideFlags: 0
@@ -347,7 +347,7 @@ Transform:
   m_GameObject: {fileID: 7668596328138559727}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.319, z: 0}
+  m_LocalPosition: {x: 0, y: 0.319, z: 0.027}
   m_LocalScale: {x: 1.930165, y: 2.3581176, z: 0.06}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -425,8 +425,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.9715005, y: 0.9999999, z: 0.28}
-  m_Center: {x: 0, y: 0.00000005055273, z: -0.045805216}
+  m_Size: {x: 0.9715006, y: 0.9999999, z: 26.805445}
+  m_Center: {x: 0, y: 0.000000050552725, z: -0.04580522}
 --- !u!1 &7736838078168288052
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,11 +479,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   portal: {fileID: 5196574530914385071}
   portalMesh: {fileID: 6894021421012557358}
-  player: {fileID: 0}
   linkedPortal: {fileID: 0}
+  portalWallCollider: {fileID: 0}
+  player: {fileID: 0}
   portalCamPivot: {fileID: 421667797315986574}
   portalCamera: {fileID: 2285922182979486941}
-  portalWallCollider: {fileID: 0}
   minDotForObliqueProj: 0.56
 --- !u!1 &9186522198241925415
 GameObject:

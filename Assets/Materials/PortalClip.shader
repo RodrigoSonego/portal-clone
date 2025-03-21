@@ -46,7 +46,7 @@ Shader "CustomRenderTexture/PortalClip"
             float4 frag(v2f i) : SV_Target
             {
                 float2 uv = i.screenPos.xy / i.screenPos.w;
-                return tex2D(_MainTex, uv) * _Color;
+                return tex2D(_MainTex, uv);
             }
             ENDCG
         }
