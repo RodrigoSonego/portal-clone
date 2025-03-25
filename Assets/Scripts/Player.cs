@@ -68,20 +68,5 @@ public class Player : MonoBehaviour
     {
         Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Portal") == false) { return; }
-
-        other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: false);
-        other.GetComponentInParent<Portal>().OnObjectEnterPortal(GetComponent<PortalTraveler>());
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Portal") == false) { return; }
-
-        other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: true);
-        other.GetComponentInParent<Portal>().OnPlayerExitPortal(GetComponent<PortalTraveler>());
-    }
+    
 }
