@@ -152,8 +152,7 @@ public class Portal : MonoBehaviour
     }
 
     //  Sets the MeshRenderer scale so that's just enough to not be clipped by the near plane
-    // also moves the portal to the back of the player when dot is negative
-    //  Useful to hide the portal from the player camera when he teleports
+    // and moves it back so the player is teleported before the wall mesh pops into view
     void PreventPortalClip()
     {
         float halfHeight = playerCamera.nearClipPlane * Mathf.Tan(playerCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
@@ -163,11 +162,7 @@ public class Portal : MonoBehaviour
         float distToClipPlaneCorner = new Vector3(halfWidth, halfHeight, playerCamera.nearClipPlane).magnitude;
 
         portalMesh.transform.localScale = new Vector3(portalMesh.transform.localScale.x, portalMesh.transform.localScale.y, distToClipPlaneCorner);
-        portalMesh.transform.localPosition = Vector3.forward * distToClipPlaneCorner * 1.5f;// (isPlayerInFrontOfPortal ? 1.5f : -1.5f);
-
-        //portalWallCollider.GetComponent<MeshRenderer>().enabled = Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)) > 0.01f;
-
-        //print(name + ": " + Vector3.Dot(portal.transform.forward, (portal.transform.position - player.transform.position)));
+        portalMesh.transform.localPosition = Vector3.forward * distToClipPlaneCorner * 1.5f;
     }
     
     public void OnObjectEnterPortal(PortalTraveler traveler)
