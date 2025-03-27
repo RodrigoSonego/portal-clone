@@ -49,8 +49,6 @@ public class Portal : MonoBehaviour
         RotateCameraWithPlayer();
 
         CreateObliqueProjection();
-
-        PreventPortalClip();
     }
     private void LateUpdate()
     {
@@ -91,8 +89,13 @@ public class Portal : MonoBehaviour
     private void MovePortalCamRelativeToPlayer()
     {
         Vector3 playerInPortalSpace = linkedPortal.transform.InverseTransformPoint(player.transform.position);
+        playerInPortalSpace.x *= -1;
+        playerInPortalSpace.z *= -1;
+        
+        Vector3 worldPos = portal.transform.TransformPoint(playerInPortalSpace);
+        
         // Only reversing X and Z since we want the camera to be behind the portal, but at the same height
-        portalCamPivot.transform.localPosition = new(-playerInPortalSpace.x, playerInPortalSpace.y, -playerInPortalSpace.z);
+        portalCamPivot.transform.position = worldPos;
     }
 
     private void RotateCameraWithPlayer()
@@ -149,20 +152,6 @@ public class Portal : MonoBehaviour
         if (portalWallCollider is null) { print($"portal {gameObject.name} sem parede"); return; }
 
         portalWallCollider.enabled = willEnable;
-    }
-
-    //  Sets the MeshRenderer scale so that's just enough to not be clipped by the near plane
-    // and moves it back so the player is teleported before the wall mesh pops into view
-    void PreventPortalClip()
-    {
-        float halfHeight = playerCamera.nearClipPlane * Mathf.Tan(playerCamera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-
-        var halfWidth = halfHeight * playerCamera.aspect;
-
-        float distToClipPlaneCorner = new Vector3(halfWidth, halfHeight, playerCamera.nearClipPlane).magnitude;
-
-        portalMesh.transform.localScale = new Vector3(portalMesh.transform.localScale.x, portalMesh.transform.localScale.y, distToClipPlaneCorner);
-        portalMesh.transform.localPosition = Vector3.forward * distToClipPlaneCorner * 1.5f;
     }
     
     public void OnObjectEnterPortal(PortalTraveler traveler)

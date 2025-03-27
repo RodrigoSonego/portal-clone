@@ -9,7 +9,7 @@ Shader "CustomRenderTexture/PortalClip"
      SubShader
      {
         Tags { "RenderType"="Opaque" "Queue"="Geometry" "IgnoreProjector"="True" }
-        Cull Off
+        //Cull Off
 
         Pass
         {
