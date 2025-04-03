@@ -35,12 +35,12 @@ public class Portal : MonoBehaviour
 
         CreateRenderTexture();
 
-        RenderPipelineManager.beginContextRendering += (a, b) => DoStuff();
+        RenderPipelineManager.beginContextRendering += (a, b) => OnPreRender();
 
         trackedTravelers = new List<PortalTraveler>();
     }
 
-    public void DoStuff()
+    public void OnPreRender()
     {
         if (linkedPortal == null) { return; }
 
@@ -88,14 +88,9 @@ public class Portal : MonoBehaviour
 
     private void MovePortalCamRelativeToPlayer()
     {
-        Vector3 playerInPortalSpace = linkedPortal.transform.InverseTransformPoint(player.transform.position);
-        playerInPortalSpace.x *= -1;
-        playerInPortalSpace.z *= -1;
+        Vector3 playerInPortalSpace = GetRelativeWorldPosition(linkedPortal.transform, portal, player.transform);
         
-        Vector3 worldPos = portal.transform.TransformPoint(playerInPortalSpace);
-        
-        // Only reversing X and Z since we want the camera to be behind the portal, but at the same height
-        portalCamPivot.transform.position = worldPos;
+        portalCamPivot.transform.position = playerInPortalSpace;
     }
 
     private void RotateCameraWithPlayer()
@@ -113,14 +108,23 @@ public class Portal : MonoBehaviour
         {
             float travelerDot = Vector3.Dot(portal.transform.forward, portal.transform.position - traveler.transform.position);
             if(traveler.PreviousDot == 0) { traveler.PreviousDot = travelerDot; }
+
+            GameObject clone = traveler.TravelerClone;
             
-            // print($"{name} currentDot: {travelerDot} old dot: {traveler.PreviousDot}");
-            // print($"{name} currentDot: {Mathf.Sign(travelerDot)} old dot: {Mathf.Sign(traveler.PreviousDot)}");
+            Vector3 eulerRotation = traveler.transform.up * (linkedPortal.transform.eulerAngles.y -
+                (portal.eulerAngles.y - traveler.transform.eulerAngles.y) + 180);
+            
+            clone.transform.position =
+                GetRelativeWorldPosition(portal, linkedPortal.transform, traveler.transform);
+
+            clone.transform.rotation = Quaternion.Euler(eulerRotation);
             
             if (Math.Sign(travelerDot) != Math.Sign(traveler.PreviousDot))
             {
                 TeleportTraveler(traveler);
                 trackedTravelers.Remove(traveler);
+                
+                linkedPortal.OnObjectEnterPortal(traveler);
                 return;
             }
 
@@ -131,16 +135,12 @@ public class Portal : MonoBehaviour
     private void TeleportTraveler(PortalTraveler traveler)
     {
         // Teleport to portalCamPivot since it will have the same offset as the player
-        Vector3 relativePos = portal.InverseTransformPoint(traveler.transform.position);
-        relativePos.x *= -1;
-        relativePos.z *= -1;
-        
-        Vector3 worldPos = linkedPortal.transform.TransformPoint(relativePos);
+        Vector3 relativePos = GetRelativeWorldPosition(portal, linkedPortal.transform, traveler.transform);
         
         Vector3 eulerRotation = traveler.transform.up * (linkedPortal.transform.eulerAngles.y -
             (portal.eulerAngles.y - traveler.transform.eulerAngles.y) + 180);
         
-        traveler.Teleport(worldPos, Quaternion.Euler(eulerRotation));
+        traveler.Teleport(relativePos, Quaternion.Euler(eulerRotation));
         
         traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward, linkedPortal.transform.position - traveler.transform.position);
         
@@ -159,12 +159,33 @@ public class Portal : MonoBehaviour
         if (trackedTravelers.Contains(traveler)) { return; }
 
         trackedTravelers.Add(traveler);
+        traveler.TravelerClone.SetActive(true);
     }
 
     public void OnPlayerExitPortal(PortalTraveler traveler) {
         if (trackedTravelers.Contains(traveler))
         {
             trackedTravelers.Remove(traveler);
+            traveler.TravelerClone.SetActive(false);
         }
+    }
+
+    /// <summary>
+    /// Calculates the World position of subject relative to destination based on subject's relation to origin
+    /// (i.e. relative position to portal)
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <param name="destination"></param>
+    /// <param name="subject"></param>
+    /// <returns>World relative position of target to destination</returns>
+    private Vector3 GetRelativeWorldPosition(Transform origin, Transform destination, Transform subject)
+    {
+        // Teleport to portalCamPivot since it will have the same offset as the player
+        Vector3 relativePos = origin.InverseTransformPoint(subject.position);
+        relativePos.x *= -1;
+        relativePos.z *= -1;
+        
+        Vector3 worldPos = destination.TransformPoint(relativePos);
+        return worldPos;
     }
 }
