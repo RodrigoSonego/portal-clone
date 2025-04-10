@@ -22,8 +22,6 @@ public class Portal : MonoBehaviour
     Vector3 portalCameraStartingRot;
 
     List<PortalTraveler> trackedTravelers;
-
-    private Vector3 _positionInLinkedPortal;
         
     private void Awake()
     {
@@ -89,12 +87,10 @@ public class Portal : MonoBehaviour
     private void SetPortalCamRelativeToPlayer()
     {
         // Calculations assume both portals have their Forward direction (blue arrow) facing the wall, will break otherwise
-        Matrix4x4 portalMatInverseRotated = GetTransformMatrixWithInvertedRotation(portal);
+        var (camPos, camRot) = GetPositionAndRotationToOtherPortal(origin: linkedPortal.transform, portal, playerCamera.transform);
         
-        Matrix4x4 mat = portalMatInverseRotated * linkedPortal.transform.worldToLocalMatrix * playerCamera.transform.localToWorldMatrix;
-        
-        portalCamPivot.transform.position = mat.GetPosition();
-        portalCamera.transform.rotation = mat.rotation;
+        portalCamPivot.transform.position = camPos;
+        portalCamera.transform.rotation = camRot;
     }
 
     private void HandlePortalInteraction()
@@ -105,14 +101,12 @@ public class Portal : MonoBehaviour
             if(traveler.PreviousDot == 0) { traveler.PreviousDot = travelerDot; }
 
             GameObject clone = traveler.TravelerClone;
-            
-            Vector3 eulerRotation = traveler.transform.up * (linkedPortal.transform.eulerAngles.y -
-                (portal.eulerAngles.y - traveler.transform.eulerAngles.y) + 180);
-            
-            clone.transform.position =
-                GetRelativeWorldPosition(portal, linkedPortal.transform, traveler.transform);
 
-            clone.transform.rotation = Quaternion.Euler(eulerRotation);
+            (Vector3 clonePos, Quaternion cloneRot) =
+                GetPositionAndRotationToOtherPortal(portal, linkedPortal.transform, traveler.transform);
+
+            clone.transform.position = clonePos;
+            clone.transform.rotation = cloneRot;
 
             if (Math.Sign(travelerDot) != Math.Sign(traveler.PreviousDot))
             {
@@ -129,19 +123,12 @@ public class Portal : MonoBehaviour
     
     private void TeleportTraveler(PortalTraveler traveler)
     {
-        // Teleport to portalCamPivot since it will have the same offset as the player
-        Vector3 relativePos = GetRelativeWorldPosition(portal, linkedPortal.transform, traveler.transform);
+        Vector3 positionToPortal;
+        Quaternion rotationToPortal;
         
-        Vector3 eulerRotation = traveler.transform.up * (linkedPortal.transform.eulerAngles.y -
-            (portal.eulerAngles.y - traveler.transform.eulerAngles.y) + 180);
-
-        Vector3 totalRotation =
-            linkedPortal.transform.eulerAngles - (portal.eulerAngles - traveler.transform.eulerAngles);
-
-        totalRotation.y += 180;
-        totalRotation.x *= -1;
+        (positionToPortal, rotationToPortal) = GetPositionAndRotationToOtherPortal(origin: portal, linkedPortal.transform,  traveler.transform);
         
-        traveler.Teleport(relativePos, Quaternion.Euler(totalRotation));
+        traveler.Teleport(positionToPortal, rotationToPortal);
         
         traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward, linkedPortal.transform.position - traveler.transform.position);
         
@@ -172,21 +159,19 @@ public class Portal : MonoBehaviour
     }
 
     /// <summary>
-    /// Calculates the World position of subject relative to destination based on subject's relation to origin
-    /// (i.e. relative position to portal)
+    /// Calculates the World position of subject relative to other portal based on its position to origin portal.
+    /// Will return position behind destination portal.
     /// </summary>
     /// <param name="origin"></param>
     /// <param name="destination"></param>
     /// <param name="subject"></param>
-    /// <returns>World relative position of target to destination</returns>
-    private Vector3 GetRelativeWorldPosition(Transform origin, Transform destination, Transform subject)
+    /// <returns>Position and rotation behind destination portal</returns>
+    private (Vector3, Quaternion) GetPositionAndRotationToOtherPortal(Transform origin, Transform destination, Transform subject)
     {
-        Vector3 relativePos = origin.InverseTransformPoint(subject.position);
-        relativePos.x *= -1;
-        relativePos.z *= -1;
-        
-        Vector3 worldPos = destination.TransformPoint(relativePos);
-        return worldPos;
+        Matrix4x4 invertedDestinationRotation = GetTransformMatrixWithInvertedRotation(destination.transform);
+            
+        Matrix4x4 mat = invertedDestinationRotation * origin.transform.worldToLocalMatrix * subject.transform.localToWorldMatrix;
+        return (mat.GetPosition(), mat.rotation);
     }
 
     /// <summary>
@@ -205,12 +190,5 @@ public class Portal : MonoBehaviour
         inverseRotatedMatrix.SetTRS(target.position, Quaternion.Euler(inverseRotation), target.localScale);
 
         return inverseRotatedMatrix;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (_positionInLinkedPortal != Vector3.zero) ;
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(_positionInLinkedPortal, 0.5f);
     }
 }
