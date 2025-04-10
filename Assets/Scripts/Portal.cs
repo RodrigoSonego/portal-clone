@@ -23,6 +23,8 @@ public class Portal : MonoBehaviour
 
     List<PortalTraveler> trackedTravelers;
 
+    private Vector3 _positionInLinkedPortal;
+        
     private void Awake()
     {
         if (linkedPortal == null) { return; }
@@ -44,9 +46,7 @@ public class Portal : MonoBehaviour
     {
         if (linkedPortal == null) { return; }
 
-        MovePortalCamRelativeToPlayer();
-
-        RotateCameraWithPlayer();
+        SetPortalCamRelativeToPlayer();
 
         CreateObliqueProjection();
     }
@@ -85,21 +85,16 @@ public class Portal : MonoBehaviour
 
         portalCamera.projectionMatrix = playerCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
     }
-
-    private void MovePortalCamRelativeToPlayer()
+    
+    private void SetPortalCamRelativeToPlayer()
     {
-        Vector3 playerInPortalSpace = GetRelativeWorldPosition(linkedPortal.transform, portal, player.transform);
+        // Calculations assume both portals have their Forward direction (blue arrow) facing the wall, will break otherwise
+        Matrix4x4 portalMatInverseRotated = GetTransformMatrixWithInvertedRotation(portal);
         
-        portalCamPivot.transform.position = playerInPortalSpace;
-    }
-
-    private void RotateCameraWithPlayer()
-    {
-        float angle = Vector3.SignedAngle(linkedPortal.transform.forward, player.transform.forward, Vector3.up);
-
-        portalCamPivot.rotation = Quaternion.Euler(0, portalCamPivotStartingRot.y + angle, 0);
-
-        portalCamera.transform.localRotation = Quaternion.Euler(portalCameraStartingRot.x + playerCamera.transform.localRotation.eulerAngles.x, portalCamera.transform.localRotation.y, 0);
+        Matrix4x4 mat = portalMatInverseRotated * linkedPortal.transform.worldToLocalMatrix * playerCamera.transform.localToWorldMatrix;
+        
+        portalCamPivot.transform.position = mat.GetPosition();
+        portalCamera.transform.rotation = mat.rotation;
     }
 
     private void HandlePortalInteraction()
@@ -118,7 +113,7 @@ public class Portal : MonoBehaviour
                 GetRelativeWorldPosition(portal, linkedPortal.transform, traveler.transform);
 
             clone.transform.rotation = Quaternion.Euler(eulerRotation);
-            
+
             if (Math.Sign(travelerDot) != Math.Sign(traveler.PreviousDot))
             {
                 TeleportTraveler(traveler);
@@ -139,8 +134,14 @@ public class Portal : MonoBehaviour
         
         Vector3 eulerRotation = traveler.transform.up * (linkedPortal.transform.eulerAngles.y -
             (portal.eulerAngles.y - traveler.transform.eulerAngles.y) + 180);
+
+        Vector3 totalRotation =
+            linkedPortal.transform.eulerAngles - (portal.eulerAngles - traveler.transform.eulerAngles);
+
+        totalRotation.y += 180;
+        totalRotation.x *= -1;
         
-        traveler.Teleport(relativePos, Quaternion.Euler(eulerRotation));
+        traveler.Teleport(relativePos, Quaternion.Euler(totalRotation));
         
         traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward, linkedPortal.transform.position - traveler.transform.position);
         
@@ -180,12 +181,36 @@ public class Portal : MonoBehaviour
     /// <returns>World relative position of target to destination</returns>
     private Vector3 GetRelativeWorldPosition(Transform origin, Transform destination, Transform subject)
     {
-        // Teleport to portalCamPivot since it will have the same offset as the player
         Vector3 relativePos = origin.InverseTransformPoint(subject.position);
         relativePos.x *= -1;
         relativePos.z *= -1;
         
         Vector3 worldPos = destination.TransformPoint(relativePos);
         return worldPos;
+    }
+
+    /// <summary>
+    /// Generates world matrix of transform with its rotation flipped
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns>Matrix with rotation flipped</returns>
+    private Matrix4x4 GetTransformMatrixWithInvertedRotation(Transform target)
+    {
+        Matrix4x4 inverseRotatedMatrix = Matrix4x4.identity;
+        Vector3 inverseRotation = new Vector3 (
+            x: -target.rotation.eulerAngles.x, 
+            y: target.rotation.eulerAngles.y + 180, 
+            z: -target.rotation.eulerAngles.z);
+        
+        inverseRotatedMatrix.SetTRS(target.position, Quaternion.Euler(inverseRotation), target.localScale);
+
+        return inverseRotatedMatrix;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_positionInLinkedPortal != Vector3.zero) ;
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(_positionInLinkedPortal, 0.5f);
     }
 }
