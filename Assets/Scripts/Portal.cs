@@ -129,6 +129,15 @@ public class Portal : MonoBehaviour
         (positionToPortal, rotationToPortal) = GetPositionAndRotationToOtherPortal(origin: portal, linkedPortal.transform,  traveler.transform);
         
         traveler.Teleport(positionToPortal, rotationToPortal);
+
+        var lVelocity = linkedPortal.transform.TransformVector(portal.InverseTransformVector(traveler.GetComponent<Rigidbody>().linearVelocity));
+        var aVelocity = linkedPortal.transform.TransformVector(portal.InverseTransformVector(traveler.GetComponent<Rigidbody>().angularVelocity));
+
+        print($"linearVelocity: {traveler.GetComponent<Rigidbody>().linearVelocity}, relative linearVelocity: {lVelocity}");
+        
+        // Vector3 travelervelocity = rotationToPortal * traveler.GetComponent<Rigidbody>().linearVelocity;
+        traveler.GetComponent<Rigidbody>().linearVelocity = Vector3.Scale(lVelocity, new Vector3(-1, 1 ,-1));
+        traveler.GetComponent<Rigidbody>().angularVelocity = Vector3.Scale(aVelocity, new Vector3(-1, 1 ,-1));
         
         traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward, linkedPortal.transform.position - traveler.transform.position);
         

@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] float moveSpeed = 5.0f;
 
+    [SerializeField] private GameObject projectile;
+    
     Rigidbody rb;
 
     InputAction moveAction;
@@ -25,6 +27,14 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         Cursor.lockState = CursorLockMode.Locked;
+        
+        InputSystem.actions.FindAction("Shoot").performed += ShootProjectile;
+    }
+
+    private void ShootProjectile(InputAction.CallbackContext obj)
+    {
+        var proj = Instantiate(projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
+        proj.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
     }
 
 
