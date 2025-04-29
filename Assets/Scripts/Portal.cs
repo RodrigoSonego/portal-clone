@@ -18,18 +18,12 @@ public class Portal : MonoBehaviour
     [SerializeField] float minDotForObliqueProj;
 
     Camera playerCamera;
-    Vector3 portalCamPivotStartingRot;
-    Vector3 portalCameraStartingRot;
 
     List<PortalTraveler> trackedTravelers;
         
     private void Awake()
     {
         if (linkedPortal == null) { return; }
-
-        portalCamPivotStartingRot = portalCamera.transform.rotation.eulerAngles;
-
-        portalCameraStartingRot = portalCamera.transform.localRotation.eulerAngles;
 
         playerCamera = Camera.main;
 
@@ -128,16 +122,7 @@ public class Portal : MonoBehaviour
         
         (positionToPortal, rotationToPortal) = GetPositionAndRotationToOtherPortal(origin: portal, linkedPortal.transform,  traveler.transform);
         
-        traveler.Teleport(positionToPortal, rotationToPortal);
-
-        var lVelocity = linkedPortal.transform.TransformVector(portal.InverseTransformVector(traveler.GetComponent<Rigidbody>().linearVelocity));
-        var aVelocity = linkedPortal.transform.TransformVector(portal.InverseTransformVector(traveler.GetComponent<Rigidbody>().angularVelocity));
-
-        print($"linearVelocity: {traveler.GetComponent<Rigidbody>().linearVelocity}, relative linearVelocity: {lVelocity}");
-        
-        // Vector3 travelervelocity = rotationToPortal * traveler.GetComponent<Rigidbody>().linearVelocity;
-        traveler.GetComponent<Rigidbody>().linearVelocity = Vector3.Scale(lVelocity, new Vector3(-1, 1 ,-1));
-        traveler.GetComponent<Rigidbody>().angularVelocity = Vector3.Scale(aVelocity, new Vector3(-1, 1 ,-1));
+        traveler.Teleport(positionToPortal, rotationToPortal, portal, linkedPortal.transform);
         
         traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward, linkedPortal.transform.position - traveler.transform.position);
         
@@ -191,12 +176,10 @@ public class Portal : MonoBehaviour
     private Matrix4x4 GetTransformMatrixWithInvertedRotation(Transform target)
     {
         Matrix4x4 inverseRotatedMatrix = Matrix4x4.identity;
-        Vector3 inverseRotation = new Vector3 (
-            x: -target.rotation.eulerAngles.x, 
-            y: target.rotation.eulerAngles.y + 180, 
-            z: -target.rotation.eulerAngles.z);
+
+        Quaternion inverseRotation = Quaternion.Euler(0, 180, 0) * target.rotation;
         
-        inverseRotatedMatrix.SetTRS(target.position, Quaternion.Euler(inverseRotation), target.localScale);
+        inverseRotatedMatrix.SetTRS(target.position, inverseRotation, target.localScale);
 
         return inverseRotatedMatrix;
     }

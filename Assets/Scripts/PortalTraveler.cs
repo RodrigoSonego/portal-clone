@@ -1,23 +1,38 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PortalTraveler : MonoBehaviour
 {
 	public float PreviousDot { get; set; }
 
 	public GameObject TravelerClone { get; set; }
 
+	[HideInInspector] public Rigidbody rb;
+	
 	private void Start()
 	{
 		if (TravelerClone is not null) {  Destroy(TravelerClone); }
 		CreateClone();
-		print(name + " has been created");
+		
+		rb = GetComponent<Rigidbody>();
 	}
 
-	public void Teleport(Vector3 destination, Quaternion rotation)
+	public void Teleport(Vector3 destination, Quaternion rotation, Transform originPortal, Transform destinationPortal)
 	{
 		transform.position = destination;
 		transform.rotation = rotation;
+		
+		var relativeLVelocity = originPortal.InverseTransformVector(rb.linearVelocity);
+		relativeLVelocity = Quaternion.Euler(0.0f, 180.0f, 0.0f) * relativeLVelocity;
+		relativeLVelocity = destinationPortal.transform.TransformVector(relativeLVelocity);
+        
+		var relativeAVelocity = originPortal.InverseTransformVector(rb.linearVelocity);
+		relativeAVelocity = Quaternion.Euler(0.0f, 180.0f, 0.0f) * relativeAVelocity;
+		relativeAVelocity = destinationPortal.transform.TransformVector(relativeAVelocity);
+        
+		rb.linearVelocity = relativeLVelocity;
+		rb.angularVelocity = relativeAVelocity;
 	}
 
 	public void CreateClone()
