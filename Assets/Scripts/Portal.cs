@@ -20,6 +20,9 @@ public class Portal : MonoBehaviour
     Camera playerCamera;
 
     List<PortalTraveler> trackedTravelers;
+
+    private RenderTexture renderTexture;
+    private Texture2D blackTexture;
         
     private void Awake()
     {
@@ -28,6 +31,7 @@ public class Portal : MonoBehaviour
         playerCamera = Camera.main;
 
         CreateRenderTexture();
+        blackTexture = Texture2D.blackTexture;
 
         RenderPipelineManager.beginContextRendering += (a, b) => OnPreRender();
 
@@ -38,6 +42,16 @@ public class Portal : MonoBehaviour
     {
         if (linkedPortal == null) { return; }
 
+        var bounds = linkedPortal.portalMesh.bounds;
+        var planes = GeometryUtility.CalculateFrustumPlanes(playerCamera);
+        if (GeometryUtility.TestPlanesAABB(planes, bounds) == false)
+        {
+            linkedPortal.portalMesh.material.SetTexture("_MainTex", blackTexture);
+            return;
+        }
+        
+        linkedPortal.portalMesh.material.SetTexture("_MainTex", renderTexture);
+        
         SetPortalCamRelativeToPlayer();
 
         CreateObliqueProjection();
@@ -49,9 +63,9 @@ public class Portal : MonoBehaviour
 
     private void CreateRenderTexture()
     {
-        RenderTexture tex = new RenderTexture(Screen.width, Screen.height, 32);
-        portalCamera.targetTexture = tex;
-        linkedPortal.portalMesh.material.SetTexture("_MainTex", tex);
+        renderTexture = new RenderTexture(Screen.width, Screen.height, 32);
+        portalCamera.targetTexture = renderTexture;
+        linkedPortal.portalMesh.material.SetTexture("_MainTex", renderTexture);
     }
 
     // Sets a Oblique projection to coincide the near plane with the portal plane
