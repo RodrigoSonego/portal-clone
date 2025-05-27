@@ -57,15 +57,12 @@ public class Portal : MonoBehaviour
 			return;
 		}
 
-		var bounds = linkedPortal.portalMesh.bounds;
-		var planes = GeometryUtility.CalculateFrustumPlanes(playerCamera);
-		if (GeometryUtility.TestPlanesAABB(planes, bounds) == false)
+		bool linkedPortalIsOnCamera = CameraUtils.AreBoundsOnCamera(playerCamera, linkedPortal.portalMesh.bounds);
+		
+		if (linkedPortalIsOnCamera == false)
 		{
-			linkedPortal.portalMesh.material.SetTexture("_MainTex", blackTexture);
 			return;
 		}
-
-		// linkedPortal.portalMesh.material.SetTexture("_MainTex", renderTexture);
 		
 		SetPortalCamRelativeToPlayer(src);
 	}
@@ -114,9 +111,13 @@ public class Portal : MonoBehaviour
 		// var (camPos, camRot) = GetPositionAndRotationToOtherPortal(origin: linkedPortal.transform, portal, playerCamera.transform);
 		var relativeMat = playerCamera.transform.localToWorldMatrix;
 		var matrices = new Matrix4x4[recursionLimit];
+
+		bool willNeedRecursion = CameraUtils.CheckIfBoundsIntersectOnCamera(portalCamera, portalMesh.bounds, linkedPortal.portalMesh.bounds);
+		
+		int recursionNumber = willNeedRecursion ? recursionLimit : 1;
 		
 		Matrix4x4 invertedPortalMat = GetTransformMatrixWithInvertedRotation(portal);
-		for (int i = 0; i < recursionLimit; i++)
+		for (int i = 0; i < recursionNumber; i++)
 		{
 			relativeMat = invertedPortalMat * linkedPortal.transform.worldToLocalMatrix * relativeMat;
 			
@@ -125,10 +126,8 @@ public class Portal : MonoBehaviour
 			posMatrices[i] = relativeMat;
 		}
 
-		for (int i = recursionLimit - 1; i >= 0; i--)
+		for (int i = recursionNumber - 1; i >= 0; i--)
 		{
-			
-			// FAZER DEBUG DESSAS POSITION
 			portalCamPivot.transform.position = matrices[i].GetPosition();
 			portalCamera.transform.rotation = matrices[i].rotation;
 			linkedPortal.portalMesh.material.SetTexture("_MainTex", renderTexture);
@@ -136,21 +135,16 @@ public class Portal : MonoBehaviour
 			// Only consider the min dot on the nearest camera, since would cause artifacts when applied to further ones
 			bool willUseMinDot = i == 0;
 			CreateObliqueProjection(willUseMinDot);
-			print($"i = {i}, willUseMinDot = {willUseMinDot}");
 			
-			
-			if (i == recursionLimit-1)
+			if (recursionNumber > 1 && i == recursionNumber-1)
 			{
+				// TODO: remove setting black texture, do stuff in shader (probably more optimized)
 				linkedPortal.portalMesh.material.SetTexture("_MainTex", blackTexture);
 			}
 			
 			
 			UniversalRenderPipeline.RenderSingleCamera(context, portalCamera);
 		}
-
-
-		// portalCamPivot.transform.position = camPos;
-		// portalCamera.transform.rotation = camRot;
 	}
 
 	private void HandlePortalInteraction()
@@ -251,7 +245,7 @@ public class Portal : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Generates world matrix of transform with its rotation flipped
+	/// Generates world matrix of transform with its rotation flipped on the Y axis
 	/// </summary>
 	/// <param name="target"></param>
 	/// <returns>Matrix with rotation flipped</returns>

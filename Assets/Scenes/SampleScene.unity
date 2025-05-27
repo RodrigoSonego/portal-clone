@@ -1919,6 +1919,11 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!23 &413772436 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8396932245207684057, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+  m_PrefabInstance: {fileID: 5085539857218567248}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &418495657 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
@@ -10647,7 +10652,7 @@ PrefabInstance:
       objectReference: {fileID: 5626188632205792859}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: recursionLimit
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: portalWallCollider
@@ -10741,7 +10746,10 @@ MonoBehaviour:
   portalCamPivot: {fileID: 421667796649499272}
   portalCamera: {fileID: 2285922182566771419}
   minDotForObliqueProj: 0.56
-  recursionLimit: 5
+  recursionLimit: 3
+  debugCam: {fileID: 2285922182566771419}
+  debugMesh: {fileID: 8396932245601840607}
+  debugMesh2: {fileID: 413772436}
 --- !u!33 &5637592467630063656
 MeshFilter:
   m_ObjectHideFlags: 0
