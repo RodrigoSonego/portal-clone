@@ -26,7 +26,6 @@ public class Portal : MonoBehaviour
 	List<PortalTraveler> trackedTravelers;
 
 	private RenderTexture renderTexture;
-	private Texture2D blackTexture;
 	
 	Matrix4x4[] posMatrices;
 
@@ -40,7 +39,6 @@ public class Portal : MonoBehaviour
 		playerCamera = Camera.main;
 
 		CreateRenderTexture();
-		blackTexture = Texture2D.blackTexture;
 
 		RenderPipelineManager.beginCameraRendering += PreRender;
 
@@ -52,11 +50,12 @@ public class Portal : MonoBehaviour
 
 	void PreRender(ScriptableRenderContext src, Camera cam)
 	{
+		print(cam.name);
 		if (linkedPortal == null)
 		{
 			return;
 		}
-
+		
 		bool linkedPortalIsOnCamera = CameraUtils.AreBoundsOnCamera(playerCamera, linkedPortal.portalMesh.bounds);
 		
 		if (linkedPortalIsOnCamera == false)
@@ -130,19 +129,17 @@ public class Portal : MonoBehaviour
 		{
 			portalCamPivot.transform.position = matrices[i].GetPosition();
 			portalCamera.transform.rotation = matrices[i].rotation;
-			linkedPortal.portalMesh.material.SetTexture("_MainTex", renderTexture);
+			linkedPortal.portalMesh.material.SetInt("_HideView", 0);
 
 			// Only consider the min dot on the nearest camera, since would cause artifacts when applied to further ones
-			bool willUseMinDot = i == 0;
-			CreateObliqueProjection(willUseMinDot);
+			CreateObliqueProjection(willUseMinDot: i == 0);
 			
-			if (recursionNumber > 1 && i == recursionNumber-1)
+			if (willNeedRecursion && i == recursionNumber-1)
 			{
-				// TODO: remove setting black texture, do stuff in shader (probably more optimized)
-				linkedPortal.portalMesh.material.SetTexture("_MainTex", blackTexture);
+				linkedPortal.portalMesh.material.SetInt("_HideView", 1);
 			}
 			
-			
+			// Should use SubmitRenderRequest but that just doesn't work, so will leave this
 			UniversalRenderPipeline.RenderSingleCamera(context, portalCamera);
 		}
 	}

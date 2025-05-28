@@ -2,8 +2,9 @@ Shader "CustomRenderTexture/PortalClip"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
+        _Color ("Color", Color) = (1, 1, 1, 1)
         _MainTex("InputTex", 2D) = "white" {}
+        _HideView("HideView", Int) = 1
      }
 
      SubShader
@@ -23,6 +24,8 @@ Shader "CustomRenderTexture/PortalClip"
 
             float4      _Color;
             sampler2D   _MainTex;
+            int         _HideView;
+            float4 blackColor = (0, 0, 0 ,1);
 
             struct appdata 
             {
@@ -46,7 +49,8 @@ Shader "CustomRenderTexture/PortalClip"
             float4 frag(v2f i) : SV_Target
             {
                 float2 uv = i.screenPos.xy / i.screenPos.w;
-                return tex2D(_MainTex, uv);
+                float4 col = _HideView ? blackColor : _Color;
+                return tex2D(_MainTex, uv) * col;
             }
             ENDCG
         }
