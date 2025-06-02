@@ -27,7 +27,7 @@ public static class CameraUtils
 		// MinMax3D portalScreenBounds = GetScreenBounds(portalCamera, portalBounds);
 		MinMax3D near = GetScreenBounds(cam, nearBounds);
 		MinMax3D far = GetScreenBounds(cam, farBounds);
-
+		
 		if (far.ZMax < near.ZMin)
 		{
 			return false;
@@ -45,14 +45,22 @@ public static class CameraUtils
 
 		return true;
 	}
-
+	
+	// Got it from Sebastian League's video, which he got from https://www.turiyaware.com/a-solution-to-unitys-camera-worldtoscreenpoint-causing-ui-elements-to-display-when-object-is-behind-the-camera/
 	private static MinMax3D GetScreenBounds(Camera cam, Bounds bounds)
 	{
 		MinMax3D minMaxCorners = new MinMax3D(min: float.MinValue, max: float.MaxValue);
 
 		for (int i = 0; i < 8; i++)
 		{
-			Vector3 corner = cam.WorldToScreenPoint(bounds.center + Vector3.Scale(bounds.extents, cube3DCorners[i]));
+			Vector3 corner = cam.WorldToViewportPoint(bounds.center + Vector3.Scale(bounds.extents, cube3DCorners[i]));
+
+			if (corner.z < 0)
+			{
+				corner.x = corner.x <= 0.5f ? 1 : 0;
+				corner.y = corner.y <= 0.5f ? 1 : 0;
+			}
+			
 			minMaxCorners.AddVector(corner);
 		}
 

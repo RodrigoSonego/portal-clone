@@ -40,17 +40,21 @@ public class Portal : MonoBehaviour
 
 		CreateRenderTexture();
 
-		RenderPipelineManager.beginCameraRendering += PreRender;
+		// RenderPipelineManager.beginContextRendering += PreRender;
 
 		trackedTravelers = new List<PortalTraveler>();
 
 		posMatrices = new Matrix4x4[recursionLimit];
 	}
 
-
-	void PreRender(ScriptableRenderContext src, Camera cam)
+	private void Update()
 	{
-		print(cam.name);
+		PreRender();
+	}
+
+	void PreRender()
+	{
+		// print(cam.name);
 		if (linkedPortal == null)
 		{
 			return;
@@ -63,7 +67,7 @@ public class Portal : MonoBehaviour
 			return;
 		}
 		
-		SetPortalCamRelativeToPlayer(src);
+		SetPortalCamRelativeToPlayer();
 	}
 
 	private void LateUpdate()
@@ -104,7 +108,7 @@ public class Portal : MonoBehaviour
 		portalCamera.projectionMatrix = playerCamera.CalculateObliqueMatrix(clipPlaneCameraSpace);
 	}
 
-	private void SetPortalCamRelativeToPlayer(ScriptableRenderContext context)
+	private void SetPortalCamRelativeToPlayer()
 	{
 		// Calculations assume both portals have their Forward direction (blue arrow) facing the wall, will break otherwise
 		// var (camPos, camRot) = GetPositionAndRotationToOtherPortal(origin: linkedPortal.transform, portal, playerCamera.transform);
@@ -140,7 +144,13 @@ public class Portal : MonoBehaviour
 			}
 			
 			// Should use SubmitRenderRequest but that just doesn't work, so will leave this
-			UniversalRenderPipeline.RenderSingleCamera(context, portalCamera);
+			// UniversalRenderPipeline.RenderSingleCamera(context, portalCamera);
+			var req = new UniversalRenderPipeline.SingleCameraRequest()
+			{
+				destination = renderTexture
+			};
+			
+			RenderPipeline.SubmitRenderRequest(portalCamera, req);
 		}
 	}
 
