@@ -26,8 +26,6 @@ public class Portal : MonoBehaviour
 	List<PortalTraveler> trackedTravelers;
 
 	private RenderTexture renderTexture;
-	
-	Matrix4x4[] posMatrices;
 
 	private void Awake()
 	{
@@ -43,8 +41,6 @@ public class Portal : MonoBehaviour
 		// RenderPipelineManager.beginContextRendering += PreRender;
 
 		trackedTravelers = new List<PortalTraveler>();
-
-		posMatrices = new Matrix4x4[recursionLimit];
 	}
 
 	private void Update()
@@ -55,7 +51,7 @@ public class Portal : MonoBehaviour
 	void PreRender()
 	{
 		// print(cam.name);
-		if (linkedPortal == null)
+		if (linkedPortal is null)
 		{
 			return;
 		}
@@ -125,8 +121,6 @@ public class Portal : MonoBehaviour
 			relativeMat = invertedPortalMat * linkedPortal.transform.worldToLocalMatrix * relativeMat;
 			
 			matrices[i] = relativeMat;
-			
-			posMatrices[i] = relativeMat;
 		}
 
 		for (int i = recursionNumber - 1; i >= 0; i--)
@@ -193,24 +187,24 @@ public class Portal : MonoBehaviour
 
 		(positionToPortal, rotationToPortal) =
 			GetPositionAndRotationToOtherPortal(origin: portal, linkedPortal.transform, traveler.transform);
-
+		
 		traveler.Teleport(positionToPortal, rotationToPortal, portal, linkedPortal.transform);
 
 		traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward,
 			linkedPortal.transform.position - traveler.transform.position);
 
-		linkedPortal.ToggleWallCollision(willEnable: false);
+		linkedPortal.ToggleWallCollision(willIgnore: true, traveler);
 	}
 
-	public void ToggleWallCollision(bool willEnable)
+	public void ToggleWallCollision(bool willIgnore, PortalTraveler traveler)
 	{
 		if (portalWallCollider is null)
 		{
-			print($"portal {gameObject.name} sem parede");
+			print($"portal {gameObject.name} with no wall");
 			return;
 		}
 
-		portalWallCollider.enabled = willEnable;
+		Physics.IgnoreCollision(portalWallCollider, traveler.mainCollider, willIgnore);
 	}
 
 	public void OnObjectEnterPortal(PortalTraveler traveler)
@@ -265,20 +259,5 @@ public class Portal : MonoBehaviour
 		inverseRotatedMatrix.SetTRS(target.position, inverseRotation, target.localScale);
 
 		return inverseRotatedMatrix;
-	}
-
-	private void OnDrawGizmos()
-	{
-		if (posMatrices == null)
-		{
-			return;
-		}
-		Gizmos.color = Color.green;
-		
-		foreach (var mat in posMatrices)
-		{
-			Gizmos.DrawSphere(mat.GetPosition(), 0.5f);
-
-		}
 	}
 }

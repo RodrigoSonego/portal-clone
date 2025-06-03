@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2285922182979486941}
   - component: {fileID: 1734939457502004240}
   m_Layer: 0
-  m_Name: Cam2
+  m_Name: CamPortal1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -508,6 +508,7 @@ MonoBehaviour:
   portalCamPivot: {fileID: 421667797315986574}
   portalCamera: {fileID: 2285922182979486941}
   minDotForObliqueProj: 0.56
+  recursionLimit: 3
 --- !u!1 &9186522198241925415
 GameObject:
   m_ObjectHideFlags: 0

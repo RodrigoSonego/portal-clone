@@ -5,7 +5,8 @@ using UnityEngine;
 public class PortalTraveler : MonoBehaviour
 {
 	public float PreviousDot { get; set; }
-
+	public Collider mainCollider;
+	
 	public GameObject TravelerClone { get; set; }
 
 	[HideInInspector] public Rigidbody rb;
@@ -16,6 +17,8 @@ public class PortalTraveler : MonoBehaviour
 		CreateClone();
 		
 		rb = GetComponent<Rigidbody>();
+
+		mainCollider = GetComponentInChildren<Collider>();
 	}
 
 	public void Teleport(Vector3 destination, Quaternion rotation, Transform originPortal, Transform destinationPortal)
@@ -55,7 +58,7 @@ public class PortalTraveler : MonoBehaviour
 	{
 		if (other.CompareTag("Portal") == false) { return; }
 
-		other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: false);
+		other.GetComponentInParent<Portal>().ToggleWallCollision(willIgnore: true, this);
 		other.GetComponentInParent<Portal>().OnObjectEnterPortal(this);
 	}
 
@@ -63,7 +66,7 @@ public class PortalTraveler : MonoBehaviour
 	{
 		if (other.CompareTag("Portal") == false) { return; }
 
-		other.GetComponentInParent<Portal>().ToggleWallCollision(willEnable: true);
+		other.GetComponentInParent<Portal>().ToggleWallCollision(willIgnore: false, this);
 		other.GetComponentInParent<Portal>().OnPlayerExitPortal(this);
 	}
 }
