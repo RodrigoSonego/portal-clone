@@ -2,15 +2,11 @@ using UnityEngine;
 
 public static class CameraUtils
 {
-	private static Vector3[] cube3DCorners =
+	public static Vector3[] quadCorners =
 	{
-		new(-1, -1, -1),
-		new(1, -1, -1),
-		new(-1, 1, -1),
 		new(-1, -1, 1),
 		new(-1, 1, 1),
 		new(1, -1, 1),
-		new(1, 1, -1),
 		new(1, 1, 1),
 	};
 
@@ -22,11 +18,9 @@ public static class CameraUtils
 	
 	public static bool CheckIfBoundsIntersectOnCamera(Camera cam, Bounds nearBounds, Bounds farBounds)
 	{
-		var planes = GeometryUtility.CalculateFrustumPlanes(cam);
-
 		// MinMax3D portalScreenBounds = GetScreenBounds(portalCamera, portalBounds);
-		MinMax3D near = GetScreenBounds(cam, nearBounds);
-		MinMax3D far = GetScreenBounds(cam, farBounds);
+		MinMax3D near = GetMinMaxFromPositions(GetScreenBounds(cam, nearBounds));
+		MinMax3D far = GetMinMaxFromPositions(GetScreenBounds(cam, farBounds));
 		
 		if (far.ZMax < near.ZMin)
 		{
@@ -42,29 +36,41 @@ public static class CameraUtils
 		{
 			return false;
 		}
-
+		
 		return true;
 	}
 	
 	// Got it from Sebastian League's video, which he got from https://www.turiyaware.com/a-solution-to-unitys-camera-worldtoscreenpoint-causing-ui-elements-to-display-when-object-is-behind-the-camera/
-	private static MinMax3D GetScreenBounds(Camera cam, Bounds bounds)
+	private static MinMax3D GetMinMaxFromPositions(Vector3[] positions)
 	{
 		MinMax3D minMaxCorners = new MinMax3D(min: float.MinValue, max: float.MaxValue);
-
-		for (int i = 0; i < 8; i++)
+		
+		foreach (var pos in positions)
 		{
-			Vector3 corner = cam.WorldToViewportPoint(bounds.center + Vector3.Scale(bounds.extents, cube3DCorners[i]));
+			minMaxCorners.AddVector(pos);
+		}
+
+		return minMaxCorners;
+	}
+	
+	private static Vector3[] GetScreenBounds(Camera cam, Bounds bounds)
+	{
+		Vector3[] corners = new Vector3[4];
+		
+		for (int i = 0; i < 4; i++)
+		{
+			Vector3 corner = cam.WorldToViewportPoint(bounds.center + Vector3.Scale(bounds.extents, quadCorners[i]));
 
 			if (corner.z < 0)
 			{
 				corner.x = corner.x <= 0.5f ? 1 : 0;
 				corner.y = corner.y <= 0.5f ? 1 : 0;
 			}
-			
-			minMaxCorners.AddVector(corner);
-		}
 
-		return minMaxCorners;
+			corners[i] = corner;
+		}
+		
+		return corners;
 	}
 }
 

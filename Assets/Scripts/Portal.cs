@@ -50,19 +50,18 @@ public class Portal : MonoBehaviour
 
 	void PreRender()
 	{
-		// print(cam.name);
 		if (linkedPortal is null)
 		{
 			return;
 		}
-		
+
 		bool linkedPortalIsOnCamera = CameraUtils.AreBoundsOnCamera(playerCamera, linkedPortal.portalMesh.bounds);
-		
+
 		if (linkedPortalIsOnCamera == false)
 		{
 			return;
 		}
-		
+
 		SetPortalCamRelativeToPlayer();
 	}
 
@@ -111,15 +110,19 @@ public class Portal : MonoBehaviour
 		var relativeMat = playerCamera.transform.localToWorldMatrix;
 		var matrices = new Matrix4x4[recursionLimit];
 
-		bool willNeedRecursion = CameraUtils.CheckIfBoundsIntersectOnCamera(portalCamera, portalMesh.bounds, linkedPortal.portalMesh.bounds);
+		bool willNeedRecursion =
+			CameraUtils.CheckIfBoundsIntersectOnCamera(portalCamera, portalMesh.bounds,
+				linkedPortal.portalMesh.bounds) && IsLinkedPortalVisible();
+
+		print($"{name} will need recursion? {willNeedRecursion}");
 		
 		int recursionNumber = willNeedRecursion ? recursionLimit : 1;
-		
+
 		Matrix4x4 invertedPortalMat = GetTransformMatrixWithInvertedRotation(portal);
 		for (int i = 0; i < recursionNumber; i++)
 		{
 			relativeMat = invertedPortalMat * linkedPortal.transform.worldToLocalMatrix * relativeMat;
-			
+
 			matrices[i] = relativeMat;
 		}
 
@@ -131,19 +134,19 @@ public class Portal : MonoBehaviour
 
 			// Only consider the min dot on the nearest camera, since would cause artifacts when applied to further ones
 			CreateObliqueProjection(willUseMinDot: i == 0);
-			
-			if (willNeedRecursion && i == recursionNumber-1)
+
+			if (willNeedRecursion && i == recursionNumber - 1)
 			{
 				linkedPortal.portalMesh.material.SetInt("_HideView", 1);
 			}
-			
+
 			// Should use SubmitRenderRequest but that just doesn't work, so will leave this
 			// UniversalRenderPipeline.RenderSingleCamera(context, portalCamera);
 			var req = new UniversalRenderPipeline.SingleCameraRequest()
 			{
 				destination = renderTexture
 			};
-			
+
 			RenderPipeline.SubmitRenderRequest(portalCamera, req);
 		}
 	}
@@ -187,7 +190,7 @@ public class Portal : MonoBehaviour
 
 		(positionToPortal, rotationToPortal) =
 			GetPositionAndRotationToOtherPortal(origin: portal, linkedPortal.transform, traveler.transform);
-		
+
 		traveler.Teleport(positionToPortal, rotationToPortal, portal, linkedPortal.transform);
 
 		traveler.PreviousDot = Vector3.Dot(linkedPortal.transform.forward,
@@ -259,5 +262,49 @@ public class Portal : MonoBehaviour
 		inverseRotatedMatrix.SetTRS(target.position, inverseRotation, target.localScale);
 
 		return inverseRotatedMatrix;
+	}
+
+	private bool IsLinkedPortalVisible()
+	{
+		portalWallCollider.enabled = false;
+		for (int i = 0; i < 4; i++)
+		{
+			var linkedCorner = linkedPortal.portalMesh.bounds.center +
+			             Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+
+			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+
+			if (Physics.Raycast(portalCorner, linkedCorner - portalCorner, out RaycastHit hit))
+			{
+				if (hit.collider.CompareTag(linkedPortal.tag))
+				{
+					return true;
+				}
+			}
+		}
+
+		portalWallCollider.enabled = true;
+
+		return false;
+	}
+
+	private void OnDrawGizmos()
+	{
+		if (name != "Portal 2")
+		{
+			return;
+		}
+
+		Gizmos.color = Color.green;
+		
+		for (int i = 0; i < 4; i++)
+		{
+			var linkedCorner = linkedPortal.portalMesh.bounds.center +
+			                   Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+
+			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+			
+			Gizmos.DrawRay(portalCorner, linkedCorner - portalCorner);
+		}
 	}
 }
