@@ -45,16 +45,18 @@ public class Portal : MonoBehaviour
 
 	private void Update()
 	{
-		PreRender();
+		HandlePortalInteraction();
+		
+		PositionAndRenderCamera();
 	}
 
-	void PreRender()
+	void PositionAndRenderCamera()
 	{
 		if (linkedPortal is null)
 		{
 			return;
 		}
-
+		
 		bool linkedPortalIsOnCamera = CameraUtils.AreBoundsOnCamera(playerCamera, linkedPortal.portalMesh.bounds);
 
 		if (linkedPortalIsOnCamera == false)
@@ -63,11 +65,6 @@ public class Portal : MonoBehaviour
 		}
 
 		SetPortalCamRelativeToPlayer();
-	}
-
-	private void LateUpdate()
-	{
-		HandlePortalInteraction();
 	}
 
 	private void CreateRenderTexture()
@@ -197,6 +194,7 @@ public class Portal : MonoBehaviour
 			linkedPortal.transform.position - traveler.transform.position);
 
 		linkedPortal.ToggleWallCollision(willIgnore: true, traveler);
+		linkedPortal.SetPortalCamRelativeToPlayer();
 	}
 
 	public void ToggleWallCollision(bool willIgnore, PortalTraveler traveler)
