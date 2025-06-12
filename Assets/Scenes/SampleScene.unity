@@ -9223,7 +9223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.4
+      value: 5.41
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9231,7 +9231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.83
+      value: -15.52
       objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9265,6 +9265,18 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1732195481}
+    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: edgeColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: edgeColor.g
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: edgeColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: linkedPortal
       value: 
@@ -10992,6 +11004,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1732195481}
+    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: edgeColor.g
+      value: 0.69803923
+      objectReference: {fileID: 0}
+    - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: edgeColor.r
+      value: 0.09803922
+      objectReference: {fileID: 0}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: linkedPortal
       value: 

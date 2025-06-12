@@ -5,8 +5,13 @@ Shader "CustomRenderTexture/PortalClip"
         _Color ("Color", Color) = (1, 1, 1, 1)
         _MainTex("InputTex", 2D) = "white" {}
         _HideView("HideView", Int) = 1
+        
         _HRadius("HorizontalRadius", Range(0, 1.0)) = 1.0
         _VRadius("VerticalRadius", Range(0, 1.0)) = 1.0
+        
+        _EdgeColor ("Edge Color", Color) = (0.1, 0.7, 1.0, 1) // Portal-blue
+        _EdgeWidth ("Edge Width", Float) = 0.1
+        _Sharpness ("Edge Sharpness", Float) = 4.0
     }
 
     SubShader
@@ -34,6 +39,10 @@ Shader "CustomRenderTexture/PortalClip"
 
             float _HRadius;
             float _VRadius;
+
+            float _EdgeWidth;
+            float4 _EdgeColor;
+            float _Sharpness;
 
             struct appdata
             {
@@ -68,12 +77,23 @@ Shader "CustomRenderTexture/PortalClip"
                 float ellipse = (centeredUV.x * centeredUV.x) / (_HRadius * _HRadius) +
                     (centeredUV.y * centeredUV.y) / (_VRadius * _VRadius);
 
-                // Discard if outside the ellipse
-                if (ellipse > 1.0)
-                    discard;
+                // If within ellipse, use default color/ camera view
+                if (ellipse < 1.0)
+                {
+                    float4 col = _HideView ? blackColor : _Color;
+                    return tex2D(_MainTex, uv) * col;
+                }
 
-                float4 col = _HideView ? blackColor : _Color;
-                return tex2D(_MainTex, uv) * col;
+                // Use edge Color within width
+                if (ellipse < 1.0 + _EdgeWidth)
+                {
+                    return _EdgeColor;
+                }
+                
+                // Discard if outside the ellipse and edge
+                discard;
+
+                return 0;
             }
             ENDCG
         }

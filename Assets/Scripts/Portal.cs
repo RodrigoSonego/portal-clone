@@ -20,6 +20,9 @@ public class Portal : MonoBehaviour
 	[SerializeField] Camera portalCamera;
 	[SerializeField] float minDotForObliqueProj;
 	[SerializeField] private int recursionLimit = 3;
+	
+	[Header("Color")]
+	[SerializeField] Color edgeColor = Color.blue;
 
 	Camera playerCamera;
 
@@ -41,6 +44,8 @@ public class Portal : MonoBehaviour
 		// RenderPipelineManager.beginContextRendering += PreRender;
 
 		trackedTravelers = new List<PortalTraveler>();
+		
+		portalMesh.material.SetColor("_EdgeColor", edgeColor);
 	}
 
 	private void Update()
