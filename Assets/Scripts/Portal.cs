@@ -269,7 +269,6 @@ public class Portal : MonoBehaviour
 
 	private bool IsLinkedPortalVisible()
 	{
-		portalWallCollider.enabled = false;
 		for (int i = 0; i < 4; i++)
 		{
 			var linkedCorner = linkedPortal.portalMesh.bounds.center +
@@ -285,8 +284,6 @@ public class Portal : MonoBehaviour
 				}
 			}
 		}
-
-		portalWallCollider.enabled = true;
 
 		return false;
 	}
