@@ -24,9 +24,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Shoot",
+                    "name": "Mouse1",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse2",
+                    "type": "Button",
+                    "id": "a061fa8d-590e-4965-a674-a280efbd9eac",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -72,7 +81,7 @@
                     "name": "Next",
                     "type": "Button",
                     "id": "b7230bb6-fc9b-4f52-8b25-f5e19cb2c2ba",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -269,7 +278,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Shoot",
+                    "action": "Mouse1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -280,7 +289,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Shoot",
+                    "action": "Mouse1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -291,7 +300,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Touch",
-                    "action": "Shoot",
+                    "action": "Mouse1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -302,7 +311,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick",
-                    "action": "Shoot",
+                    "action": "Mouse1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -313,7 +322,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
-                    "action": "Shoot",
+                    "action": "Mouse1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -324,7 +333,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Shoot",
+                    "action": "Mouse1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -501,6 +510,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ceb9dd67-c223-41ca-a71a-053140486eac",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Mouse2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

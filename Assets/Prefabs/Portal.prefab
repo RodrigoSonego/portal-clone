@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 6129357258163288421}
   m_Layer: 6
   m_Name: BorderColliderR
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -179,8 +179,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.07658264, y: 0.9999999, z: 3.172625}
-  m_Center: {x: 0.543292, y: 0, z: 1.5763125}
+  m_Size: {x: 0.11488965, y: 0.9999999, z: 3.172625}
+  m_Center: {x: 0.43218136, y: 0, z: 1.5763125}
 --- !u!1 &5605604186165687285
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 3590885330403829882}
   m_Layer: 6
   m_Name: BorderColliderB
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -363,8 +363,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0163816, y: 0.96845496, z: 26.805458}
-  m_Center: {x: 0, y: 0.019472154, z: -0.04580518}
+  m_Size: {x: 0.9729269, y: 1.023693, z: 26.805458}
+  m_Center: {x: 0, y: 0.010303784, z: -0.04580518}
 --- !u!1 &6917293237561759518
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 591306858478990347}
   m_Layer: 6
   m_Name: BorderColliderL
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -416,8 +416,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.07555278, y: 0.9999999, z: 3.2382596}
-  m_Center: {x: -0.54277676, y: 0, z: 1.6091299}
+  m_Size: {x: 0.088888995, y: 0.9999999, z: 3.2382596}
+  m_Center: {x: -0.42191106, y: 0, z: 1.6091299}
 --- !u!1 &7614836575946889969
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,6 +509,8 @@ MonoBehaviour:
   portalCamera: {fileID: 2285922182979486941}
   minDotForObliqueProj: 0.56
   recursionLimit: 3
+  edgeColor: {r: 0, g: 0, b: 1, a: 1}
+  isPlaced: 0
 --- !u!1 &9186522198241925415
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,7 +523,7 @@ GameObject:
   - component: {fileID: 3947980768519767560}
   m_Layer: 6
   m_Name: BorderColliderT
-  m_TagString: Untagged
+  m_TagString: Portal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

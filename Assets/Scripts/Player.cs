@@ -8,9 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] Camera cam;
     [SerializeField] float sensitivity = 2f;
 
-    [SerializeField] float moveSpeed = 5.0f;
-
-    [SerializeField] private GameObject projectile;
+    [SerializeField] private float moveSpeed = 5.0f;
     
     Rigidbody rb;
 
@@ -28,14 +26,14 @@ public class Player : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         
-        InputSystem.actions.FindAction("Shoot").performed += ShootProjectile;
+        // InputSystem.actions.FindAction("Shoot").performed += ShootProjectile;
     }
 
-    private void ShootProjectile(InputAction.CallbackContext obj)
-    {
-        var proj = Instantiate(projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
-        proj.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
-    }
+    // private void ShootProjectile(InputAction.CallbackContext obj)
+    // {
+    //     var proj = Instantiate(projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
+    //     proj.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
+    // }
 
 
     void FixedUpdate()

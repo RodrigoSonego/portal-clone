@@ -30,6 +30,8 @@ public class Portal : MonoBehaviour
 
 	private RenderTexture renderTexture;
 
+
+	public bool isPlaced = false;
 	private void Start()
 	{
 		if (linkedPortal == null)
@@ -48,6 +50,10 @@ public class Portal : MonoBehaviour
 
 	private void Update()
 	{
+		if (linkedPortal.isPlaced == false)
+		{
+			return;
+		}
 		HandlePortalInteraction();
 		
 		PositionAndRenderCamera();
@@ -111,8 +117,8 @@ public class Portal : MonoBehaviour
 		var matrices = new Matrix4x4[recursionLimit];
 
 		bool willNeedRecursion =
-			CameraUtils.CheckIfBoundsIntersectOnCamera(portalCamera, portalMesh.bounds,
-				linkedPortal.portalMesh.bounds) && IsLinkedPortalVisible();
+			CameraUtils.CheckIfBoundsIntersectOnCamera(portalCamera, portalMesh.bounds, linkedPortal.portalMesh.bounds) && 
+			IsLinkedPortalVisible();
 
 		print($"{name} will need recursion? {willNeedRecursion}");
 		
@@ -270,12 +276,13 @@ public class Portal : MonoBehaviour
 		for (int i = 0; i < 8; i++)
 		{
 			var linkedCorner = linkedPortal.portalMesh.bounds.center +
-			             Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
+			             Vector3.Scale(linkedPortal.portalMesh.bounds.extents * 0.5f, CameraUtils.cube3DCorners[i]);
 
 			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 
 			if (Physics.Raycast(portalCorner, linkedCorner - portalCorner, out RaycastHit hit))
 			{
+				print(hit.collider.name);
 				if (hit.collider.CompareTag(linkedPortal.tag))
 				{
 					return true;
@@ -303,7 +310,7 @@ public class Portal : MonoBehaviour
 		for (int i = 0; i < 8; i++)
 		{
 			var linkedCorner = linkedPortal.portalMesh.bounds.center +
-			                   Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
+			                   Vector3.Scale(linkedPortal.portalMesh.bounds.extents * 0.5f, CameraUtils.cube3DCorners[i]);
 
 			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 			
