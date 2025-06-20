@@ -2,11 +2,15 @@ using UnityEngine;
 
 public static class CameraUtils
 {
-	public static Vector3[] quadCorners =
+	public static Vector3[] cube3DCorners =
 	{
+		new(-1, -1, -1),
+		new(1, -1, -1),
+		new(-1, 1, -1),
 		new(-1, -1, 1),
 		new(-1, 1, 1),
 		new(1, -1, 1),
+		new(1, 1, -1),
 		new(1, 1, 1),
 	};
 
@@ -55,11 +59,11 @@ public static class CameraUtils
 	
 	private static Vector3[] GetScreenBounds(Camera cam, Bounds bounds)
 	{
-		Vector3[] corners = new Vector3[4];
+		Vector3[] corners = new Vector3[8];
 		
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			Vector3 corner = cam.WorldToViewportPoint(bounds.center + Vector3.Scale(bounds.extents, quadCorners[i]));
+			Vector3 corner = cam.WorldToViewportPoint(bounds.center + Vector3.Scale(bounds.extents, cube3DCorners[i]));
 
 			if (corner.z < 0)
 			{

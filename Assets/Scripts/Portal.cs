@@ -30,7 +30,7 @@ public class Portal : MonoBehaviour
 
 	private RenderTexture renderTexture;
 
-	private void Awake()
+	private void Start()
 	{
 		if (linkedPortal == null)
 		{
@@ -40,8 +40,6 @@ public class Portal : MonoBehaviour
 		playerCamera = Camera.main;
 
 		CreateRenderTexture();
-
-		// RenderPipelineManager.beginContextRendering += PreRender;
 
 		trackedTravelers = new List<PortalTraveler>();
 		
@@ -269,12 +267,12 @@ public class Portal : MonoBehaviour
 
 	private bool IsLinkedPortalVisible()
 	{
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			var linkedCorner = linkedPortal.portalMesh.bounds.center +
-			             Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+			             Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 
-			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 
 			if (Physics.Raycast(portalCorner, linkedCorner - portalCorner, out RaycastHit hit))
 			{
@@ -288,6 +286,11 @@ public class Portal : MonoBehaviour
 		return false;
 	}
 
+	public void SetWallCollider(Collider collider)
+	{
+		portalWallCollider = collider;
+	}
+
 	private void OnDrawGizmos()
 	{
 		if (name != "Portal 2")
@@ -297,12 +300,12 @@ public class Portal : MonoBehaviour
 
 		Gizmos.color = Color.green;
 		
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 8; i++)
 		{
 			var linkedCorner = linkedPortal.portalMesh.bounds.center +
-			                   Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+			                   Vector3.Scale(linkedPortal.portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 
-			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.quadCorners[i]);
+			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 			
 			Gizmos.DrawRay(portalCorner, linkedCorner - portalCorner);
 		}
