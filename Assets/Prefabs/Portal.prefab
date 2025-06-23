@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1145162080504554110}
   - component: {fileID: 2285922182979486941}
   - component: {fileID: 1734939457502004240}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CamPortal1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ Camera:
   m_Depth: -2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 6129357258163288421}
   m_Layer: 6
   m_Name: BorderColliderR
-  m_TagString: Portal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -154,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 5081167130734893573}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.319, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.930165, y: 2.3581176, z: 0.2828854}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 3590885330403829882}
   m_Layer: 6
   m_Name: BorderColliderB
-  m_TagString: Portal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -207,7 +207,7 @@ Transform:
   m_GameObject: {fileID: 5605604186165687285}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.319, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.930165, y: 2.3581176, z: 0.2828854}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 8396932245207684057}
   - component: {fileID: 8554507671704992401}
   - component: {fileID: 5610977030001699619}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Quad
   m_TagString: Portal
   m_Icon: {fileID: 0}
@@ -263,7 +263,7 @@ Transform:
   m_GameObject: {fileID: 5738399723121941559}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.31900007, z: 0.049}
+  m_LocalPosition: {x: 0, y: 0, z: 0.049}
   m_LocalScale: {x: 1.930165, y: 2.3581176, z: 0.06}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 591306858478990347}
   m_Layer: 6
   m_Name: BorderColliderL
-  m_TagString: Portal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -391,7 +391,7 @@ Transform:
   m_GameObject: {fileID: 6917293237561759518}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.319, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.930165, y: 2.3581176, z: 0.2828854}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -427,7 +427,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 421667797315986574}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cam2Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +523,7 @@ GameObject:
   - component: {fileID: 3947980768519767560}
   m_Layer: 6
   m_Name: BorderColliderT
-  m_TagString: Portal
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -537,7 +537,7 @@ Transform:
   m_GameObject: {fileID: 9186522198241925415}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.319, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.930165, y: 2.3581176, z: 0.2828854}
   m_ConstrainProportionsScale: 0
   m_Children: []

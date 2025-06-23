@@ -30,6 +30,7 @@ public class Portal : MonoBehaviour
 
 	private RenderTexture renderTexture;
 
+	public MeshRenderer PortalMeshRenderer => portalMesh;
 
 	public bool isPlaced = false;
 	private void Start()
@@ -315,6 +316,19 @@ public class Portal : MonoBehaviour
 			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
 			
 			Gizmos.DrawRay(portalCorner, linkedCorner - portalCorner);
+		}
+		
+		Vector3[] testDirections =
+		{
+			transform.up * 1.2f,
+			-transform.up * 1.2f,
+			transform.right ,
+			-transform.right 
+		};
+
+		foreach (var dir in testDirections)
+		{
+			Gizmos.DrawRay(portalMesh.transform.position, dir);
 		}
 	}
 }
