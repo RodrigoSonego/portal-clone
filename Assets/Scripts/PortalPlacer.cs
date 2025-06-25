@@ -42,12 +42,13 @@ public class PortalPlacer : MonoBehaviour
         portal.transform.rotation = portalRotation;
         portal.gameObject.SetActive(true);
 
-        FixPortalPositioning(portal, portal.transform.position);
+        FixPositioningOnIntersection(portal);
+        FixOverhangPositioning(portal);
         
         portal.isPlaced = true;
     }
 
-    Vector3 FixPortalPositioning(Portal portal, Vector3 position)
+    void FixPositioningOnIntersection(Portal portal)
     {
         Vector3[] testDirections =
         {
@@ -62,7 +63,7 @@ public class PortalPlacer : MonoBehaviour
         for (int i = 0; i < testDirections.Length; i++)
         {
             RaycastHit hit;
-            bool hasHit = Physics.Raycast(position, testDirections[i], out hit, testDistances[i], layerMask);
+            bool hasHit = Physics.Raycast(portal.transform.position, testDirections[i], out hit, testDistances[i], layerMask);
             if (hasHit)
             {
                 // Debug.DrawRay(position, testDirections[i] * testDistances[i], Color.red, 5f);
@@ -76,9 +77,38 @@ public class PortalPlacer : MonoBehaviour
             }
 
         }
-        
+    }
+
+    // TODO: Unfuck this and ammend commit
+    void FixOverhangPositioning(Portal portal)
+    {
+        Vector3[] testDirections =
+        {
+            -portal.transform.up,
+            portal.transform.up,
+            -portal.transform.right,
+            portal.transform.right,
+        };
+
+        Vector3[] testPoints =
+        {
+            new (0, 1.2f, 0.1f),
+            new (0, -1.2f, 0.1f),
+            new (0.9f, 0, 0.1f),
+            new (-0.9f, 0, 0.1f)
+        };
+
+        for (int i = 0; i < testDirections.Length; i++)
+        {
+            Vector3 rayPos = portal.transform.TransformPoint(testPoints[i]);
+
+            if (Physics.CheckSphere(rayPos, 0.2f, layerMask)) { continue; }
             
-        
-        return new Vector3();
+            if (Physics.Raycast(rayPos, testDirections[i], out RaycastHit hit, 2, layerMask))
+            {
+                Vector3 offset = hit.point - rayPos;
+                portal.transform.Translate(Vector3.Scale(-offset, testDirections[i]), Space.World);
+            }
+        }
     }
 }
