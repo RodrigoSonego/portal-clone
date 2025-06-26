@@ -8666,7 +8666,9 @@ MonoBehaviour:
   portal1: {fileID: 418495657}
   portal2: {fileID: 1462793846}
   offsetFromWall: 0.07
-  layerMask:
+  verticalTestDistance: 1.2
+  horizontalTestDistance: 0.9
+  positionCorrectionMask:
     serializedVersion: 2
     m_Bits: 129
 --- !u!43 &1801578440
