@@ -2,18 +2,6 @@ using UnityEngine;
 
 public static class CameraUtils
 {
-	public static Vector3[] cube3DCorners =
-	{
-		new(-1, -1, -1),
-		new(1, -1, -1),
-		new(-1, 1, -1),
-		new(-1, -1, 1),
-		new(-1, 1, 1),
-		new(1, -1, 1),
-		new(1, 1, -1),
-		new(1, 1, 1),
-	};
-
 	public static bool AreBoundsOnCamera(Camera camera, Bounds bounds)
 	{
 		var planes = GeometryUtility.CalculateFrustumPlanes(camera);
@@ -22,7 +10,6 @@ public static class CameraUtils
 	
 	public static bool CheckIfBoundsIntersectOnCamera(Camera cam, Bounds nearBounds, Bounds farBounds)
 	{
-		// MinMax3D portalScreenBounds = GetScreenBounds(portalCamera, portalBounds);
 		MinMax3D near = GetMinMaxFromPositions(GetScreenBounds(cam, nearBounds));
 		MinMax3D far = GetMinMaxFromPositions(GetScreenBounds(cam, farBounds));
 		
@@ -59,11 +46,12 @@ public static class CameraUtils
 	
 	private static Vector3[] GetScreenBounds(Camera cam, Bounds bounds)
 	{
-		Vector3[] corners = new Vector3[8];
+		Vector3[] worldSpaceCorners = MeshUtils.GetWorldSpaceCorners(bounds);
+		Vector3[] camSpaceCorners = new Vector3[8];
 		
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < worldSpaceCorners.Length; i++)
 		{
-			Vector3 corner = cam.WorldToViewportPoint(bounds.center + Vector3.Scale(bounds.extents, cube3DCorners[i]));
+			Vector3 corner = cam.WorldToViewportPoint(worldSpaceCorners[i]);
 
 			if (corner.z < 0)
 			{
@@ -71,10 +59,10 @@ public static class CameraUtils
 				corner.y = corner.y <= 0.5f ? 1 : 0;
 			}
 
-			corners[i] = corner;
+			camSpaceCorners[i] = corner;
 		}
 		
-		return corners;
+		return camSpaceCorners;
 	}
 }
 

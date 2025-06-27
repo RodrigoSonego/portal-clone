@@ -121,7 +121,7 @@ public class Portal : MonoBehaviour
 			CameraUtils.CheckIfBoundsIntersectOnCamera(portalCamera, portalMesh.bounds, linkedPortal.portalMesh.bounds) && 
 			IsLinkedPortalVisible();
 
-		print($"{name} will need recursion? {willNeedRecursion}");
+		// print($"{name} will need recursion? {willNeedRecursion}");
 		
 		int recursionNumber = willNeedRecursion ? recursionLimit : 1;
 
@@ -146,9 +146,7 @@ public class Portal : MonoBehaviour
 			{
 				linkedPortal.portalMesh.material.SetInt("_HideView", 1);
 			}
-
-			// Should use SubmitRenderRequest but that just doesn't work, so will leave this
-			// UniversalRenderPipeline.RenderSingleCamera(context, portalCamera);
+			
 			var req = new UniversalRenderPipeline.SingleCameraRequest()
 			{
 				destination = renderTexture
@@ -274,16 +272,13 @@ public class Portal : MonoBehaviour
 
 	private bool IsLinkedPortalVisible()
 	{
-		for (int i = 0; i < 8; i++)
+		Vector3[] linkedCorners = MeshUtils.GetWorldSpaceCorners(linkedPortal.portalMesh);
+		Vector3[] portalCorners = MeshUtils.GetWorldSpaceCorners(portalMesh);
+		
+		for (int i = 0; i < portalCorners.Length; i++)
 		{
-			var linkedCorner = linkedPortal.portalMesh.bounds.center +
-			             Vector3.Scale(linkedPortal.portalMesh.bounds.extents * 0.5f, CameraUtils.cube3DCorners[i]);
-
-			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
-
-			if (Physics.Raycast(portalCorner, linkedCorner - portalCorner, out RaycastHit hit))
+			if (Physics.Raycast(portalCorners[i], linkedCorners[i] - portalCorners[i], out RaycastHit hit))
 			{
-				print(hit.collider.name);
 				if (hit.collider.CompareTag(linkedPortal.tag))
 				{
 					return true;
@@ -299,36 +294,4 @@ public class Portal : MonoBehaviour
 		portalWallCollider = collider;
 	}
 
-	private void OnDrawGizmos()
-	{
-		if (name != "Portal 2")
-		{
-			return;
-		}
-
-		Gizmos.color = Color.green;
-		
-		for (int i = 0; i < 8; i++)
-		{
-			var linkedCorner = linkedPortal.portalMesh.bounds.center +
-			                   Vector3.Scale(linkedPortal.portalMesh.bounds.extents * 0.5f, CameraUtils.cube3DCorners[i]);
-
-			var portalCorner = portalMesh.bounds.center + Vector3.Scale(portalMesh.bounds.extents, CameraUtils.cube3DCorners[i]);
-			
-			Gizmos.DrawRay(portalCorner, linkedCorner - portalCorner);
-		}
-		
-		Vector3[] testDirections =
-		{
-			transform.up * 1.2f,
-			-transform.up * 1.2f,
-			transform.right ,
-			-transform.right 
-		};
-
-		foreach (var dir in testDirections)
-		{
-			Gizmos.DrawRay(portalMesh.transform.position, dir);
-		}
-	}
 }
