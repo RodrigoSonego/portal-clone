@@ -53,6 +53,7 @@ public class Portal : MonoBehaviour
 	{
 		if (linkedPortal.isPlaced == false)
 		{
+			portalMesh.material.SetInt("_HideView", 1);
 			return;
 		}
 		HandlePortalInteraction();

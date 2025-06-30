@@ -80,8 +80,12 @@ Shader "CustomRenderTexture/PortalClip"
                 // If within ellipse, use default color/ camera view
                 if (ellipse < 1.0)
                 {
-                    float4 col = _HideView ? blackColor : _Color;
-                    return tex2D(_MainTex, uv) * col;
+                    if (_HideView)
+                    {
+                        return _EdgeColor;
+                    }
+                    
+                    return tex2D(_MainTex, uv) * _Color;
                 }
 
                 // Use edge Color within width
