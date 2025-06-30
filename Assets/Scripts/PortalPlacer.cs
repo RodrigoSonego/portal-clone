@@ -14,6 +14,7 @@ public class PortalPlacer : MonoBehaviour
     [SerializeField] private float verticalTestDistance = 1.2f;
     [SerializeField] private float horizontalTestDistance = 0.9f;
     [Space]
+    [SerializeField] string wallTag;
     [SerializeField] LayerMask positionCorrectionMask;
     
     void Start()
@@ -29,7 +30,7 @@ public class PortalPlacer : MonoBehaviour
     {
         bool hasHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
 
-        if (hasHit && hit.collider.CompareTag("Wall"))
+        if (hasHit && hit.collider.CompareTag(wallTag))
         {  
             PositionAndRotatePortal(hit.point, hit.normal, portal);
             portal.SetWallCollider(hit.collider);

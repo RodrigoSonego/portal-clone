@@ -8150,9 +8150,10 @@ MonoBehaviour:
   offsetFromWall: 0.07
   verticalTestDistance: 1.2
   horizontalTestDistance: 0.9
+  wallTag: Wall
   positionCorrectionMask:
     serializedVersion: 2
-    m_Bits: 129
+    m_Bits: 193
 --- !u!43 &1801578440
 Mesh:
   m_ObjectHideFlags: 0
@@ -8615,11 +8616,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!4 &1856861427 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3999707098142707039, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
-  m_PrefabInstance: {fileID: 5085539857218567248}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1874131207
 GameObject:
   m_ObjectHideFlags: 0
@@ -9077,37 +9073,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
---- !u!1 &1890277266
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1890277267}
-  m_Layer: 6
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1890277267
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1890277266}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.12}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1856861427}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1920208387
 GameObject:
   m_ObjectHideFlags: 0
@@ -10774,6 +10739,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 591306858478990347, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Size.x
+      value: 0.26575044
+      objectReference: {fileID: 0}
+    - target: {fileID: 591306858478990347, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Center.x
+      value: -0.51034415
+      objectReference: {fileID: 0}
+    - target: {fileID: 5081167130734893573, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5196574530914385071, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.95
@@ -10814,6 +10791,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5605604186165687285, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5626188632597063773, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: player
       value: 
@@ -10834,6 +10815,18 @@ PrefabInstance:
       propertyPath: portalWallCollider
       value: 
       objectReference: {fileID: 2032674601}
+    - target: {fileID: 6129357258163288421, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Size.x
+      value: 0.25580424
+      objectReference: {fileID: 0}
+    - target: {fileID: 6129357258163288421, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Center.x
+      value: 0.502642
+      objectReference: {fileID: 0}
+    - target: {fileID: 6917293237561759518, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7736838078168288052, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
       propertyPath: m_Name
       value: Portal 1
@@ -10842,12 +10835,13 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 9186522198241925415, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3999707098142707039, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1890277267}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44cc88ef50548d6438cdfd5630136257, type: 3}
 --- !u!1660057539 &9223372036854775807
