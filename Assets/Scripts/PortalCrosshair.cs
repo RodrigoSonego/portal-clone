@@ -9,8 +9,7 @@ public class PortalCrosshair : MonoBehaviour
 
     private void Start()
     {
-        blueFill.enabled = false;
-        orangeFill.enabled = false;
+        ResetCrosshair();
     }
 
     public void ToggleBlueFill(bool toggle)
@@ -21,5 +20,11 @@ public class PortalCrosshair : MonoBehaviour
     public void ToggleOrangeFill(bool toggle)
     {
         orangeFill.enabled = toggle;
+    }
+
+    public void ResetCrosshair()
+    {
+        blueFill.enabled = false;
+        orangeFill.enabled = false;
     }
 }

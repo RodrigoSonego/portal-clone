@@ -26,8 +26,9 @@ public class PortalPlacer : MonoBehaviour
         
         InputSystem.actions.FindAction("Mouse1").performed += (_) => TryToPlacePortal(portal1);
         InputSystem.actions.FindAction("Mouse2").performed += (_) => TryToPlacePortal(portal2);
+        InputSystem.actions.FindAction("Clear").performed += _ => ClearPortals();
     }
-    
+
     private void TryToPlacePortal(Portal portal)
     {
         bool hasHit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit);
@@ -109,6 +110,17 @@ public class PortalPlacer : MonoBehaviour
                 portal.transform.Translate(Vector3.Scale(-offset, tests[i].Direction), Space.World);
             }
         }
+    }
+    
+    private void ClearPortals()
+    {
+        portal1.gameObject.SetActive(false);
+        portal1.isPlaced = false;
+        
+        portal2.gameObject.SetActive(false);
+        portal2.isPlaced = false;
+        
+        crosshair.ResetCrosshair();
     }
 
     struct IntersectionTest
