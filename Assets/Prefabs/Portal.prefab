@@ -197,7 +197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6748927349012630929
 Transform:
   m_ObjectHideFlags: 0
@@ -232,8 +232,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0500002, y: 0.04999999, z: 0.720583}
-  m_Center: {x: 0, y: -0.53, z: 0.35029152}
+  m_Size: {x: 1.0500002, y: 0.14582224, z: 0.720583}
+  m_Center: {x: 0, y: -0.57791066, z: 0.35029152}
 --- !u!1 &5738399723121941559
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,5 +539,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0500002, y: 0.04999999, z: 0.720583}
-  m_Center: {x: 0, y: 0.53, z: 0.35029152}
+  m_Size: {x: 1.0500002, y: 0.18197411, z: 0.720583}
+  m_Center: {x: 0, y: 0.5959853, z: 0.35029152}

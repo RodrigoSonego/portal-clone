@@ -264,7 +264,8 @@ public class Portal : MonoBehaviour
 	{
 		Matrix4x4 inverseRotatedMatrix = Matrix4x4.identity;
 
-		Quaternion inverseRotation = Quaternion.Euler(0, 180, 0) * target.rotation;
+		// Quaternion inverseRotation = Quaternion.Euler(0, 180, 0) * target.rotation;
+		Quaternion inverseRotation = Quaternion.LookRotation(-target.forward);
 
 		inverseRotatedMatrix.SetTRS(target.position, inverseRotation, target.localScale);
 

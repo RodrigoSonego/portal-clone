@@ -16,6 +16,8 @@ public class PortalPlacer : MonoBehaviour
     [Space]
     [SerializeField] string wallTag;
     [SerializeField] LayerMask positionCorrectionMask;
+    [Space]
+    [SerializeField] PortalCrosshair crosshair;
     
     void Start()
     {
@@ -34,6 +36,10 @@ public class PortalPlacer : MonoBehaviour
         {  
             PositionAndRotatePortal(hit.point, hit.normal, portal);
             portal.SetWallCollider(hit.collider);
+            
+            // This should definitely be done somewhere else
+            crosshair.ToggleBlueFill  (portal1.isPlaced);
+            crosshair.ToggleOrangeFill(portal2.isPlaced);
         }
     }
 
