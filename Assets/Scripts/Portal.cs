@@ -179,7 +179,7 @@ public class Portal : MonoBehaviour
 			if (Math.Sign(travelerDot) != Math.Sign(traveler.PreviousDot))
 			{
 				TeleportTraveler(traveler);
-				trackedTravelers.Remove(traveler);
+				OnPlayerExitPortal(traveler);
 
 				linkedPortal.OnObjectEnterPortal(traveler);
 				return;
