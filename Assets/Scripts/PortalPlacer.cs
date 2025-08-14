@@ -53,20 +53,20 @@ public class PortalPlacer : MonoBehaviour
         portal.transform.rotation = portalRotation;
         portal.gameObject.SetActive(true);
 
-        FixPositioningOnIntersection(portal);
+        FixPositioningOnIntersection(portal, portal.transform.position);
         FixOverhangPositioning(portal);
         
         portal.isPlaced = true;
     }
 
     // Fix positioning on intersections of terrain to no not go through walls, ceiling or floor 
-    void FixPositioningOnIntersection(Portal portal)
+    void FixPositioningOnIntersection(Portal portal ,Vector3 position)
     {
         IntersectionTest[] tests =
         {
             new (portal.transform.up, verticalTestDistance),
-            new (-portal.transform.up, verticalTestDistance),
             new (portal.transform.right, horizontalTestDistance),
+            new (-portal.transform.up, verticalTestDistance),
             new (-portal.transform.right, horizontalTestDistance),
         };
 
@@ -74,8 +74,9 @@ public class PortalPlacer : MonoBehaviour
         {
             RaycastHit hit;
             bool hasHit = Physics.Raycast(portal.transform.position, tests[i].Direction, out hit, tests[i].Distance, positionCorrectionMask);
-            if (hasHit)
+            if (hasHit && hit.transform.parent != portal.transform)
             {
+                Debug.DrawLine(position + (portal.transform.TransformDirection(tests[i].Direction) * tests[i].Distance), position, Color.yellow, 15f);
                 float offset = tests[i].Distance - hit.distance;
                 Vector3 newOffset = -offset * tests[i].Direction;
                 portal.transform.Translate(newOffset, Space.World);
@@ -101,6 +102,8 @@ public class PortalPlacer : MonoBehaviour
         for (int i = 0; i < tests.Length; i++)
         {
             Vector3 rayPos = portal.transform.TransformPoint(tests[i].Point);
+            
+            // Debug.DrawLine(rayPos, portal.transform.position, Color.red, 5f);
 
             if (Physics.CheckSphere(rayPos, 0.2f, positionCorrectionMask)) { continue; }
             
